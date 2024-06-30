@@ -13,11 +13,11 @@ This is a local flapak build used for testing
 2- Build and install the app with each change
 
 ```
-flatpak-builder build-dir io.github.sigmasd.stimulator.yml --force-clean --user --install
+flatpak-builder build-dir io.github.sigmasd.share.yml --force-clean --user --install
 ```
 
 3- Run the app
 
 ```
-flatpak run io.github.sigmasd.stimulator
+flatpak run io.github.sigmasd.share
 ```
