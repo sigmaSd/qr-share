@@ -19,9 +19,10 @@ const Gdk: Gdk_.Gdk = python.import("gi.repository.Gdk");
 const GLib: GLib_.GLib = python.import("gi.repository.GLib");
 const Gio: Gio_.Gio = python.import("gi.repository.Gio");
 
-const css = Deno.readTextFileSync(
+const css = await fetch(
   new URL(import.meta.resolve("./main.css")),
-);
+)
+  .then((r) => r.text());
 
 const worker = new Worker(new URL("./main.worker.ts", import.meta.url).href, {
   type: "module",
