@@ -19,6 +19,10 @@ const Gdk: Gdk_.Gdk = python.import("gi.repository.Gdk");
 const GLib: GLib_.GLib = python.import("gi.repository.GLib");
 const Gio: Gio_.Gio = python.import("gi.repository.Gio");
 
+const css = Deno.readTextFileSync(
+  new URL(import.meta.resolve("./main.css")).pathname,
+);
+
 const worker = new Worker(new URL("./main.worker.ts", import.meta.url).href, {
   type: "module",
 });
@@ -37,9 +41,7 @@ class MainWindow extends Gtk.ApplicationWindow {
 
     // Apply CSS to the window
     const cssProvider = Gtk.CssProvider();
-    cssProvider.load_from_path(
-      new URL(import.meta.resolve("./main.css")).pathname,
-    );
+    cssProvider.load_from_data(css);
     Gtk.StyleContext.add_provider_for_display(
       Gdk.Display.get_default(),
       cssProvider,
