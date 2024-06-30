@@ -24,23 +24,45 @@ const worker = new Worker(new URL("./main.worker.ts", import.meta.url).href, {
 });
 
 class MainWindow extends Gtk.ApplicationWindow {
-  #vbox: Gtk_.Box;
   #label: Gtk_.Label;
   #picture: Gtk_.Picture;
   #dropTarget: Gtk_.DropTarget;
+  #contentBox: Gtk_.Box;
+
   constructor(kwArg: NamedArgument) {
     super(kwArg);
-    this.set_title("Demo");
-    this.set_size_request(300, 300);
+    this.set_title("File Drop Demo");
+    this.set_default_size(400, 400);
     this.connect("close-request", python.callback(this.#onCloseRequest));
 
-    this.#vbox = Gtk.Box(kw`orientation=${Gtk.Orientation.VERTICAL}`);
+    // Apply CSS to the window
+    const cssProvider = Gtk.CssProvider();
+    cssProvider.load_from_path(
+      new URL(import.meta.resolve("./main.css")).pathname,
+    );
+    Gtk.StyleContext.add_provider_for_display(
+      Gdk.Display.get_default(),
+      cssProvider,
+      Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
+    );
+
+    // Add CSS class to the window
+    this.get_style_context().add_class("main-window");
+
     this.#label = Gtk.Label(kw`label=${"Drop a file here"}`);
+    this.#label.get_style_context().add_class("instruction-label");
+
     this.#picture = Gtk.Picture();
     this.#picture.set_filename("/tmp/qr.png");
-    this.#vbox.append(this.#label);
-    this.#vbox.append(this.#picture);
-    this.set_child(this.#vbox);
+    this.#picture.set_size_request(200, 200);
+    this.#picture.set_keep_aspect_ratio(true);
+
+    this.#contentBox = Gtk.Box(kw`orientation=${Gtk.Orientation.VERTICAL}`);
+    this.#contentBox.get_style_context().add_class("content-box");
+    this.#contentBox.append(this.#label);
+    this.#contentBox.append(this.#picture);
+
+    this.set_child(this.#contentBox);
 
     this.#dropTarget = Gtk.DropTarget.new(
       Gio.File,
@@ -55,8 +77,9 @@ class MainWindow extends Gtk.ApplicationWindow {
     (_a1: any, _dropTarget: Gtk_.DropTarget, file: Gio_.File) => {
       const filePath: string = file.get_path().valueOf();
       if (filePath) {
-        this.#label.set_text(filePath);
-        worker.postMessage({ type: "file", path: filePath });
+        const fileName = filePath.split("/").pop();
+        this.#label.set_text(`File dropped: ${fileName}`);
+        worker.postMessage({ type: "file", path: fileName });
         return true;
       }
       return false;
@@ -71,10 +94,12 @@ class MainWindow extends Gtk.ApplicationWindow {
 
 class App extends Adw.Application {
   #win: MainWindow | undefined;
+
   constructor(kwArg: NamedArgument) {
     super(kwArg);
     this.connect("activate", this.onActivate);
   }
+
   onActivate = python.callback((_kwarg, app: Gtk_.Application) => {
     this.#win = new MainWindow(new NamedArgument("application", app));
     this.#win.present();

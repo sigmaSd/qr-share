@@ -1,7 +1,7 @@
 import { instantiate as instantiateQr } from "/home/mrcool/dev/lab/fff/lib/rs_lib.generated.js";
 const { qr } = instantiateQr();
 
-let filePath: string;
+let fileName: string;
 
 const port = 8080;
 const handler = async (): Promise<Response> => {
@@ -9,10 +9,10 @@ const handler = async (): Promise<Response> => {
   headers.set("Content-Type", "application/octet-stream");
   headers.set(
     "Content-Disposition",
-    `attachment; filename="${filePath.split("/").pop()}"`,
+    `attachment; filename="${fileName}"`,
   );
 
-  const file = await Deno.open(filePath);
+  const file = await Deno.open(fileName);
 
   return new Response(file.readable, {
     status: 200,
@@ -34,7 +34,7 @@ self.onmessage = (event) => {
   console.log("[worker] recived msg:", event.data);
   switch (event.data.type) {
     case "file":
-      filePath = event.data.path;
+      fileName = event.data.path;
       break;
   }
 };
