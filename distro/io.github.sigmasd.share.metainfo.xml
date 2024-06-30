@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.sigmasd.share</id>
+  <name>Share</name>
+  <summary>
+    Share a file with qr
+  </summary>
+  <developer_name>Bedis Nbiba</developer_name>
+
+  <metadata_license>CC0</metadata_license>
+  <project_license>MIT</project_license>
+
+  <description>
+    <p>
+      Share a file with qr
+    </p>
+  </description>
+
+  <launchable type="desktop-id">io.github.sigmasd.share.desktop</launchable>
+
+  <url type="homepage">https://github.com/sigmaSd/qr-share</url>
+  <url type="bugtracker">https://github.com/sigmaSd/qr-share/issues</url>
+
+  <content_rating type="oars-1.1" />
+
+  <keywords>
+    <keyword>share</keyword>
+    <keyword>qr</keyword>
+  </keywords>
+
+  <categories>
+    <category>Utility</category>
+  </categories>
+  
+  <provides>
+    <binary>share</binary>
+  </provides>
+</component>

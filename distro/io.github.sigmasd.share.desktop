@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Share
+Comment=Share a file with a qr scan
+Keywords=share;qr;
+TryExec=share
+Exec=share %F
+Icon=io.github.sigmasd.share
+Type=Application
+Categories=Utility;
