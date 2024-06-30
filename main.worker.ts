@@ -1,6 +1,6 @@
 import { qrPng } from "jsr:@sigmasd/qrpng@0.1.3";
 
-let fileName: string;
+let filePath: string;
 
 const port = 8080;
 const handler = async (): Promise<Response> => {
@@ -8,10 +8,10 @@ const handler = async (): Promise<Response> => {
   headers.set("Content-Type", "application/octet-stream");
   headers.set(
     "Content-Disposition",
-    `attachment; filename="${fileName}"`,
+    `attachment; filename="${filePath.split("/").pop()}"`,
   );
 
-  const file = await Deno.open(fileName);
+  const file = await Deno.open(filePath);
 
   return new Response(file.readable, {
     status: 200,
@@ -36,7 +36,7 @@ self.onmessage = (event) => {
   console.log("[worker] recived msg:", event.data);
   switch (event.data.type) {
     case "file":
-      fileName = event.data.path;
+      filePath = event.data.path;
       break;
   }
 };

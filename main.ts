@@ -82,7 +82,7 @@ class MainWindow extends Gtk.ApplicationWindow {
       if (filePath) {
         const fileName = filePath.split("/").pop();
         this.#label.set_text(`File dropped: ${fileName}`);
-        worker.postMessage({ type: "file", path: fileName });
+        worker.postMessage({ type: "file", path: filePath });
         return true;
       }
       return false;
