@@ -1,5 +1,4 @@
-import { instantiate as instantiateQr } from "/home/mrcool/dev/lab/fff/lib/rs_lib.generated.js";
-const { qr } = instantiateQr();
+import { qrPng } from "jsr:@sigmasd/qrpng@0.1.3";
 
 let fileName: string;
 
@@ -25,7 +24,10 @@ Deno.serve({
   port,
   onListen: (addr) => {
     const serverAddr = `http://${addr.hostname}:${addr.port}`;
-    Deno.writeFileSync("/tmp/qr.png", qr(new TextEncoder().encode(serverAddr)));
+    Deno.writeFileSync(
+      "/tmp/qr.png",
+      qrPng(new TextEncoder().encode(serverAddr)),
+    );
   },
 }, handler);
 
