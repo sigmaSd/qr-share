@@ -20,7 +20,7 @@ const GLib: GLib_.GLib = python.import("gi.repository.GLib");
 const Gio: Gio_.Gio = python.import("gi.repository.Gio");
 
 const css = Deno.readTextFileSync(
-  new URL(import.meta.resolve("./main.css")).pathname,
+  new URL(import.meta.resolve("./main.css")),
 );
 
 const worker = new Worker(new URL("./main.worker.ts", import.meta.url).href, {
