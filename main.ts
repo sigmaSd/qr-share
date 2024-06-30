@@ -36,7 +36,7 @@ class MainWindow extends Gtk.ApplicationWindow {
 
   constructor(kwArg: NamedArgument) {
     super(kwArg);
-    this.set_title("File Drop Demo");
+    this.set_title("QR Share");
     this.set_default_size(400, 400);
     this.connect("close-request", python.callback(this.#onCloseRequest));
 
