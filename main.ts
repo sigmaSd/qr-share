@@ -8,7 +8,7 @@ import {
   kw,
   NamedArgument,
   python,
-} from "jsr:@sigma/gtk-py@0.4.19";
+} from "jsr:@sigma/gtk-py@0.4.20";
 
 const gi = python.import("gi");
 gi.require_version("Gtk", "4.0");
