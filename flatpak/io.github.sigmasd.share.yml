@@ -19,12 +19,10 @@ modules:
   - name: share
     buildsystem: simple
     build-commands:
-      - mkdir -p /app/bin/runtime
-      - cp deno /app/bin/deno
-      - cp -r src /app/bin/runtime/src
-      - cp deno.json /app/bin/runtime/deno.json
-      - cp -r vendor /app/bin/runtime/vendor
+      - DENORT_BIN=$PWD/denort ./deno compile --output share-bin --include ./src/main.worker.ts --allow-all --unstable-ffi ./src/main.ts
 
+      - mkdir -p /app/bin/
+      - mv share-bin /app/bin/share-bin
       - mv share /app/bin/share
 
       - install -Dm644 distro/io.github.sigmasd.share.desktop -t /app/share/applications/
@@ -35,11 +33,14 @@ modules:
       - type: script
         dest-filename: share
         commands:
-          - DENO_PYTHON_PATH=/usr/lib/$(uname -m)-linux-gnu/libpython3.11.so.1.0 /app/bin/deno run --allow-all --unstable-ffi /app/bin/runtime/src/main.ts
+          - DENO_PYTHON_PATH=/usr/lib/$(uname -m)-linux-gnu/libpython3.11.so.1.0 /app/bin/share-bin
 
       - type: archive
-        url: https://github.com/denoland/deno/releases/download/v1.40.2/deno-x86_64-unknown-linux-gnu.zip
-        sha256: acaf4ed5568a9bd1b6f59f699218cd7d9844e777e570666d1ceb2740c1527ec3
+        url: https://github.com/denoland/deno/releases/download/v1.44.2/deno-x86_64-unknown-linux-gnu.zip
+        sha256: 8910a8c1119e1293af54437757af01c10818a1560d6e01f2db7d5427cd8ce4e7
+      - type: archive
+        url: https://github.com/denoland/deno/releases/download/v1.44.2/denort-x86_64-unknown-linux-gnu.zip
+        sha256: 8c7636a98add9ee4125726ac89cc3c7aa827d458a58bf68a40eca11eb4a62e48
       - type: dir
         path: ../
 

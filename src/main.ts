@@ -19,11 +19,6 @@ const Gdk: Gdk_.Gdk = python.import("gi.repository.Gdk");
 const GLib: GLib_.GLib = python.import("gi.repository.GLib");
 const Gio: Gio_.Gio = python.import("gi.repository.Gio");
 
-const css = await fetch(
-  new URL(import.meta.resolve("./main.css")),
-)
-  .then((r) => r.text());
-
 const worker = new Worker(new URL("./main.worker.ts", import.meta.url).href, {
   type: "module",
 });
@@ -42,7 +37,23 @@ class MainWindow extends Gtk.ApplicationWindow {
 
     // Apply CSS to the window
     const cssProvider = Gtk.CssProvider();
-    cssProvider.load_from_data(css);
+    cssProvider.load_from_data(`\
+.main-window {
+  background-color: #f0f0f0;
+}
+.instruction-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333333;
+  margin: 20px;
+}
+.content-box {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  padding: 20px;
+}`);
     Gtk.StyleContext.add_provider_for_display(
       Gdk.Display.get_default(),
       cssProvider,
