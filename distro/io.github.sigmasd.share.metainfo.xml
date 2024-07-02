@@ -4,8 +4,10 @@
   <name>Share</name>
   <summary>Easily share files</summary>
   <developer_name>Bedis Nbiba</developer_name>
+
   <metadata_license>CC0</metadata_license>
   <project_license>MIT</project_license>
+
   <description>
     <p>Share is a simple file sharing application</p>
     <p>Features:</p>
@@ -15,16 +17,29 @@
     </ul>
     <p>Share makes file transfer hassle-free, whether you're sharing documents, images, or any other file type. Simply drop a file into the application. Scan the QR code with another device to initiate the transfer.</p>
   </description>
+
   <launchable type="desktop-id">io.github.sigmasd.share.desktop</launchable>
+
   <screenshots>
     <screenshot type="default" style="light">
       <caption>Share application interface</caption>
       <image>https://raw.githubusercontent.com/sigmaSd/qr-share/master/distro/demo-init.png</image>
     </screenshot>
   </screenshots>
+
   <url type="homepage">https://github.com/sigmaSd/qr-share</url>
   <url type="bugtracker">https://github.com/sigmaSd/qr-share/issues</url>
+
   <content_rating type="oars-1.1" />
+
+  <releases>
+     <release version="0.1.3" date="2024-06-02">
+      <description>
+        <p>Initial release</p>
+      </description>
+    </release>
+  </releases>
+
   <keywords>
     <keyword>share</keyword>
     <keyword>qr</keyword>
