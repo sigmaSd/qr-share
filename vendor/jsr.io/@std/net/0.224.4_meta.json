@@ -1,0 +1,71 @@
+{
+  "manifest": {
+    "/deno.json": {
+      "size": 201,
+      "checksum": "sha256-ff89aaf4e5840d743afd57895041710db8cf5f500a12ea6cd18301d91e233dad"
+    },
+    "/get_network_address.ts": {
+      "size": 1611,
+      "checksum": "sha256-4cc687aa6c2fc7a0fbd0f652783c4dd6f70e95a3c571e3be9940a6348ca1b512"
+    },
+    "/get_available_port.ts": {
+      "size": 1344,
+      "checksum": "sha256-36d7cfe869fe211637650100410e82ca9c995463297c334d3ac6346d0b18aed7"
+    },
+    "/mod.ts": {
+      "size": 463,
+      "checksum": "sha256-742568d83dd2ffa593693da41776cfe73705db5f9dc52f7a7db6f6193d433c76"
+    },
+    "/get_network_address_test.ts": {
+      "size": 2609,
+      "checksum": "sha256-37fcdd4971681f0d88b324d46ca90e7948debb5a784dc4cf4190b54679f537eb"
+    },
+    "/get_available_port_test.ts": {
+      "size": 1796,
+      "checksum": "sha256-67fc3c4328109accc655593894385dd9b2d4ec62b397930b9de55b4d7f64237b"
+    }
+  },
+  "moduleGraph2": {
+    "/get_available_port.ts": {},
+    "/get_network_address.ts": {},
+    "/mod.ts": {
+      "dependencies": [
+        {
+          "type": "static",
+          "kind": "export",
+          "specifier": "./get_available_port.ts",
+          "specifierRange": [
+            [
+              16,
+              14
+            ],
+            [
+              16,
+              39
+            ]
+          ]
+        },
+        {
+          "type": "static",
+          "kind": "export",
+          "specifier": "./get_network_address.ts",
+          "specifierRange": [
+            [
+              17,
+              14
+            ],
+            [
+              17,
+              40
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  "exports": {
+    ".": "./mod.ts",
+    "./get-available-port": "./get_available_port.ts",
+    "./get-network-address": "./get_network_address.ts"
+  }
+}
