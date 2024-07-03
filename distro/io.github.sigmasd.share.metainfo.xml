@@ -33,7 +33,14 @@
   <content_rating type="oars-1.1" />
 
   <releases>
-     <release version="0.1.3" date="2024-06-02">
+     <release version="0.1.4" date="2024-07-03">
+      <description>
+        <p>Support serving local directories</p>
+        <p>Serve a starting page when no file has been dropped yet</p>
+        <p>Fix local ip address</p>
+      </description>
+    </release>
+     <release version="0.1.3" date="2024-07-02">
       <description>
         <p>Initial release</p>
       </description>
