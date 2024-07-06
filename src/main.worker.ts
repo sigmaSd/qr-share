@@ -77,6 +77,7 @@ if (import.meta.main) {
         showDirListing: true,
       });
     });
+    //@ts-ignore worker
     self.postMessage({ type: "start" });
   };
 
