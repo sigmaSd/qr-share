@@ -55,22 +55,25 @@ if (import.meta.main) {
       );
     },
   }, async (req): Promise<Response> => {
-    console.log("[worker] serving file:", filePath);
-    try {
-      const meta = await Deno.stat(filePath);
-      if (meta.isFile) {
-        return serveFile(req, filePath);
-      }
-      return serveDir(req, {
-        fsRoot: filePath,
-        showDirListing: true,
-      });
-    } catch {
+    if (!filePath) {
       return new Response(emptyPage, {
         status: 404,
         headers: { "Content-Type": "text/html" },
       });
     }
+    if (new URL(req.url).pathname !== "/") {
+      return new Response("Not Found", { status: 404 });
+    }
+
+    console.log("[worker] serving file:", filePath);
+    const meta = await Deno.stat(filePath);
+    if (meta.isFile) {
+      return serveFile(req, filePath);
+    }
+    return serveDir(req, {
+      fsRoot: filePath,
+      showDirListing: true,
+    });
   });
 
   //@ts-ignore worker
