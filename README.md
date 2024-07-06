@@ -2,6 +2,10 @@
 
 Drop a file in this application to share it with a qr code
 
+<a href='https://flathub.org/apps/io.github.sigmasd.share'>
+  <img width='240' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-i-en.png'/>
+</a>
+
 ## Usage
 
 ```
