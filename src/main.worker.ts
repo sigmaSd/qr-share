@@ -50,7 +50,7 @@ if (import.meta.main) {
       const serverAddr = `http://${getLocalAddr()}:${addr.port}`;
       console.log("[worker] HTTP server running. Access it at:", serverAddr);
       await Deno.writeFile(
-        await Deno.makeTempFile(),
+        "/tmp/qr.png",
         qrPng(new TextEncoder().encode(serverAddr)),
       );
     },
