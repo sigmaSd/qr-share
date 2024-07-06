@@ -46,11 +46,11 @@ if (import.meta.main) {
 
   Deno.serve({
     port: 0,
-    onListen: (addr) => {
+    onListen: async (addr) => {
       const serverAddr = `http://${getLocalAddr()}:${addr.port}`;
       console.log("[worker] HTTP server running. Access it at:", serverAddr);
-      Deno.writeFileSync(
-        "/tmp/qr.png",
+      await Deno.writeFile(
+        await Deno.makeTempFile(),
         qrPng(new TextEncoder().encode(serverAddr)),
       );
     },
