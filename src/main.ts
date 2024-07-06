@@ -129,7 +129,7 @@ class App extends Adw.Application {
 if (import.meta.main) {
   worker.postMessage({ type: "qrPath", path: qrPath });
   worker.onmessage = (event) => {
-    console.log("[main] recieved msg:", event.data);
+    console.log("[main] received msg:", event.data);
     switch (event.data.type) {
       case "start": {
         const app = new App(kw`application_id=${"io.github.sigmasd.share"}`);

@@ -83,7 +83,7 @@ if (import.meta.main) {
 
   //@ts-ignore worker
   self.onmessage = (event) => {
-    console.log("[worker] recived msg:", event.data);
+    console.log("[worker] received msg:", event.data);
     switch (event.data.type) {
       case "file":
         filePath = event.data.path;
