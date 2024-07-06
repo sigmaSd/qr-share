@@ -139,6 +139,7 @@ if (import.meta.main) {
           signal.SIGINT,
           python.callback(() => {
             worker.terminate();
+            Deno.removeSync(qrPath);
             app.quit();
           }),
         );
