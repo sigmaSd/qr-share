@@ -22,6 +22,7 @@ const Gio: Gio_.Gio = python.import("gi.repository.Gio");
 const worker = new Worker(new URL("./main.worker.ts", import.meta.url).href, {
   type: "module",
 });
+const qrPath = Deno.makeTempFileSync();
 
 class MainWindow extends Gtk.ApplicationWindow {
   #label: Gtk_.Label;
@@ -67,7 +68,7 @@ class MainWindow extends Gtk.ApplicationWindow {
     this.#label.get_style_context().add_class("instruction-label");
 
     this.#picture = Gtk.Picture();
-    this.#picture.set_filename("/tmp/qr.png");
+    this.#picture.set_filename(qrPath);
     this.#picture.set_size_request(200, 200);
     this.#picture.set_keep_aspect_ratio(true);
 
@@ -106,6 +107,7 @@ class MainWindow extends Gtk.ApplicationWindow {
 
   #onCloseRequest = () => {
     worker.terminate();
+    Deno.removeSync(qrPath);
     return false;
   };
 }
@@ -125,15 +127,24 @@ class App extends Adw.Application {
 }
 
 if (import.meta.main) {
-  const app = new App(kw`application_id=${"io.github.sigmasd.share"}`);
-  const signal = python.import("signal");
-  GLib.unix_signal_add(
-    GLib.PRIORITY_HIGH,
-    signal.SIGINT,
-    python.callback(() => {
-      worker.terminate();
-      app.quit();
-    }),
-  );
-  app.run(Deno.args);
+  worker.postMessage({ type: "qrPath", path: qrPath });
+  worker.onmessage = (event) => {
+    console.log("[main] recieved msg:", event.data);
+    switch (event.data.type) {
+      case "start": {
+        const app = new App(kw`application_id=${"io.github.sigmasd.share"}`);
+        const signal = python.import("signal");
+        GLib.unix_signal_add(
+          GLib.PRIORITY_HIGH,
+          signal.SIGINT,
+          python.callback(() => {
+            worker.terminate();
+            app.quit();
+          }),
+        );
+        app.run(Deno.args);
+        break;
+      }
+    }
+  };
 }

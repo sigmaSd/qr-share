@@ -43,38 +43,42 @@ const emptyPage = `\
 
 if (import.meta.main) {
   let filePath: string;
+  let qrPath: string;
 
-  Deno.serve({
-    port: 0,
-    onListen: async (addr) => {
-      const serverAddr = `http://${getLocalAddr()}:${addr.port}`;
-      console.log("[worker] HTTP server running. Access it at:", serverAddr);
-      await Deno.writeFile(
-        "/tmp/qr.png",
-        qrPng(new TextEncoder().encode(serverAddr)),
-      );
-    },
-  }, async (req): Promise<Response> => {
-    if (!filePath) {
-      return new Response(emptyPage, {
-        status: 404,
-        headers: { "Content-Type": "text/html" },
+  const startServer = () => {
+    Deno.serve({
+      port: 0,
+      onListen: async (addr) => {
+        const serverAddr = `http://${getLocalAddr()}:${addr.port}`;
+        console.log("[worker] HTTP server running. Access it at:", serverAddr);
+        await Deno.writeFile(
+          qrPath,
+          qrPng(new TextEncoder().encode(serverAddr)),
+        );
+      },
+    }, async (req): Promise<Response> => {
+      if (!filePath) {
+        return new Response(emptyPage, {
+          status: 404,
+          headers: { "Content-Type": "text/html" },
+        });
+      }
+      if (new URL(req.url).pathname !== "/") {
+        return new Response("Not Found", { status: 404 });
+      }
+
+      console.log("[worker] serving file:", filePath);
+      const meta = await Deno.stat(filePath);
+      if (meta.isFile) {
+        return serveFile(req, filePath);
+      }
+      return serveDir(req, {
+        fsRoot: filePath,
+        showDirListing: true,
       });
-    }
-    if (new URL(req.url).pathname !== "/") {
-      return new Response("Not Found", { status: 404 });
-    }
-
-    console.log("[worker] serving file:", filePath);
-    const meta = await Deno.stat(filePath);
-    if (meta.isFile) {
-      return serveFile(req, filePath);
-    }
-    return serveDir(req, {
-      fsRoot: filePath,
-      showDirListing: true,
     });
-  });
+    self.postMessage({ type: "start" });
+  };
 
   //@ts-ignore worker
   self.onmessage = (event) => {
@@ -82,6 +86,10 @@ if (import.meta.main) {
     switch (event.data.type) {
       case "file":
         filePath = event.data.path;
+        break;
+      case "qrPath":
+        qrPath = event.data.path;
+        startServer();
         break;
     }
   };
