@@ -88,8 +88,7 @@ class MainWindow extends Gtk.ApplicationWindow {
   }
 
   #onDrop = python.callback(
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    (_a1: any, _dropTarget: Gtk_.DropTarget, file: Gio_.File) => {
+    (_a1: object, _dropTarget: Gtk_.DropTarget, file: Gio_.File) => {
       const filePath: string = file.get_path().valueOf();
       if (filePath) {
         const fileName = filePath.split("/").pop();
