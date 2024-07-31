@@ -53,6 +53,9 @@ export interface Gtk {
       actions: Gdk4_.DragAction,
     ) => DropTarget;
   };
+  EventControllerKey: {
+    new: () => EventControllerKey;
+  };
 }
 
 export type Application = PythonConvertible;
@@ -237,6 +240,9 @@ export interface EventController extends GObject2_.Object {
 }
 
 export interface DropTarget extends EventController {
+}
+
+export interface EventControllerKey extends GObject2_.Object {
 }
 
 export enum ApplicationInhibitFlags {

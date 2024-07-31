@@ -8,7 +8,7 @@ import {
   kw,
   NamedArgument,
   python,
-} from "jsr:@sigma/gtk-py@0.4.20";
+} from "jsr:@sigma/gtk-py@0.4.21";
 
 const gi = python.import("gi");
 gi.require_version("Gtk", "4.0");
@@ -117,6 +117,7 @@ class MainWindow extends Gtk.ApplicationWindow {
 
   #onKeyPressed = python.callback(
     (
+      // deno-lint-ignore no-explicit-any
       _: any,
       _controller: Gtk_.EventControllerKey,
       keyval: number,
@@ -125,6 +126,7 @@ class MainWindow extends Gtk.ApplicationWindow {
     ) => {
       if (
         keyval === Gdk.KEY_v.valueOf() &&
+        //@ts-ignore: exists in pyobject
         state.__and__(Gdk.ModifierType.CONTROL_MASK)
           .__eq__(Gdk.ModifierType.CONTROL_MASK)
           .valueOf()
@@ -141,6 +143,7 @@ class MainWindow extends Gtk.ApplicationWindow {
   };
 
   #onTextReceived = python.callback(
+    // deno-lint-ignore no-explicit-any
     (_: any, _clipboard: Gdk_.Clipboard, result: Gio_.AsyncResult) => {
       const text = this.#clipboard.read_text_finish(result).valueOf();
 
