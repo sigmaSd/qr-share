@@ -29,12 +29,16 @@ class MainWindow extends Gtk.ApplicationWindow {
   #picture: Gtk_.Picture;
   #dropTarget: Gtk_.DropTarget;
   #contentBox: Gtk_.Box;
+  #clipboard: Gdk_.Clipboard;
 
   constructor(kwArg: NamedArgument) {
     super(kwArg);
     this.set_title("Share");
     this.set_default_size(400, 400);
     this.connect("close-request", python.callback(this.#onCloseRequest));
+
+    // Initialize clipboard
+    this.#clipboard = Gdk.Display.get_default().get_clipboard();
 
     // Apply CSS to the window
     const cssProvider = Gtk.CssProvider();
@@ -64,7 +68,9 @@ class MainWindow extends Gtk.ApplicationWindow {
     // Add CSS class to the window
     this.get_style_context().add_class("main-window");
 
-    this.#label = Gtk.Label(kw`label=${"Drop a file here"}`);
+    this.#label = Gtk.Label(
+      kw`label=${"Drop a file here or press Ctrl+V to paste"}`,
+    );
     this.#label.get_style_context().add_class("instruction-label");
 
     this.#picture = Gtk.Picture();
@@ -85,6 +91,11 @@ class MainWindow extends Gtk.ApplicationWindow {
     );
     this.#dropTarget.connect("drop", this.#onDrop);
     this.add_controller(this.#dropTarget);
+
+    // Add key event controller for Ctrl+V
+    const keyController = Gtk.EventControllerKey.new();
+    keyController.connect("key-pressed", this.#onKeyPressed);
+    this.add_controller(keyController);
   }
 
   #onDrop = python.callback(
@@ -101,6 +112,44 @@ class MainWindow extends Gtk.ApplicationWindow {
         return true;
       }
       return false;
+    },
+  );
+
+  #onKeyPressed = python.callback(
+    (
+      _: any,
+      _controller: Gtk_.EventControllerKey,
+      keyval: number,
+      _keycode: number,
+      state: Gdk_.ModifierType,
+    ) => {
+      if (
+        keyval === Gdk.KEY_v.valueOf() &&
+        state.__and__(Gdk.ModifierType.CONTROL_MASK)
+          .__eq__(Gdk.ModifierType.CONTROL_MASK)
+          .valueOf()
+      ) {
+        this.#handlePaste();
+        return true;
+      }
+      return false;
+    },
+  );
+
+  #handlePaste = () => {
+    this.#clipboard.read_text_async(null, this.#onTextReceived);
+  };
+
+  #onTextReceived = python.callback(
+    (_: any, _clipboard: Gdk_.Clipboard, result: Gio_.AsyncResult) => {
+      const text = this.#clipboard.read_text_finish(result).valueOf();
+
+      if (text) {
+        this.#label.set_text(text);
+        worker.postMessage({ type: "text", content: text });
+      } else {
+        console.warn("No text found in clipboard");
+      }
     },
   );
 

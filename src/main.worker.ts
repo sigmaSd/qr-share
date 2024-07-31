@@ -13,7 +13,7 @@ const emptyPage = `\
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>No File Found</title>
+  <title>No Content Found</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -35,14 +35,15 @@ const emptyPage = `\
 </head>
 <body>
   <div class="message">
-    <h1>No File Found</h1>
-    <p>Please drop a file on the application first.</p>
+    <h1>No Content Found</h1>
+    <p>Please drop a file or paste text in the application first.</p>
   </div>
 </body>
 </html>`;
 
 if (import.meta.main) {
-  let filePath: string;
+  let filePath: string | null = null;
+  let textContent: string | null = null;
   let qrPath: string;
 
   const startServer = () => {
@@ -57,7 +58,7 @@ if (import.meta.main) {
         );
       },
     }, async (req): Promise<Response> => {
-      if (!filePath) {
+      if (!filePath && !textContent) {
         return new Response(emptyPage, {
           status: 404,
           headers: { "Content-Type": "text/html" },
@@ -67,15 +68,25 @@ if (import.meta.main) {
         return new Response("Not Found", { status: 404 });
       }
 
-      console.log("[worker] serving file:", filePath);
-      const meta = await Deno.stat(filePath);
-      if (meta.isFile) {
-        return serveFile(req, filePath);
+      if (textContent) {
+        console.log("[worker] serving text content");
+        return new Response(textContent, {
+          headers: { "Content-Type": "text/plain" },
+        });
+      } else if (filePath) {
+        console.log("[worker] serving file:", filePath);
+        const meta = await Deno.stat(filePath);
+        if (meta.isFile) {
+          return serveFile(req, filePath);
+        }
+        return serveDir(req, {
+          fsRoot: filePath,
+          showDirListing: true,
+        });
       }
-      return serveDir(req, {
-        fsRoot: filePath,
-        showDirListing: true,
-      });
+
+      // This should never happen, but just in case
+      return new Response("Internal Server Error", { status: 500 });
     });
     //@ts-ignore worker
     self.postMessage({ type: "start" });
@@ -87,6 +98,11 @@ if (import.meta.main) {
     switch (event.data.type) {
       case "file":
         filePath = event.data.path;
+        textContent = null; // Reset text content when a file is shared
+        break;
+      case "text":
+        textContent = event.data.content;
+        filePath = null; // Reset file path when text is shared
         break;
       case "qrPath":
         qrPath = event.data.path;
