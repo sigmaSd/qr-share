@@ -34,6 +34,11 @@
   <content_rating type="oars-1.1" />
 
   <releases>
+     <release version="0.1.8" date="2024-07-31">
+      <description>
+        <p>Add ctrl-v support</p>
+      </description>
+    </release>
      <release version="0.1.7" date="2024-07-06">
       <description>
         <p>Restore use a cross platform path for the qr image</p>
