@@ -145,6 +145,7 @@ class MainWindow extends Gtk.ApplicationWindow {
         "text/uri-list",
         "text/plain",
         "text/plain;charset=utf-8",
+        "image/png",
       ],
       GLib.PRIORITY_HIGH,
       null,
@@ -157,14 +158,27 @@ class MainWindow extends Gtk.ApplicationWindow {
     (_: any, clipboard: Gdk_.Clipboard, result: Gio_.AsyncResult) => {
       const [_inputStream, value] = clipboard.read_finish(result);
       const mimeType = value.valueOf();
-      clipboard.read_text_async(
-        null,
-        python.callback(
-          // deno-lint-ignore no-explicit-any
-          (_: any, _clipboard: Gdk_.Clipboard, result: Gio_.AsyncResult) =>
-            this.#onTextReceived(result, mimeType),
-        ),
-      );
+      if (mimeType.startsWith("text/")) {
+        clipboard.read_text_async(
+          null,
+          python.callback(
+            // deno-lint-ignore no-explicit-any
+            (_: any, _clipboard: Gdk_.Clipboard, result: Gio_.AsyncResult) =>
+              this.#onTextReceived(result, mimeType),
+          ),
+        );
+      } else if (mimeType.startsWith("image/")) {
+        clipboard.read_texture_async(
+          null,
+          python.callback(
+            // deno-lint-ignore no-explicit-any
+            (_: any, _clipboard: Gdk_.Clipboard, result: Gio_.AsyncResult) =>
+              this.#onImageReceived(result),
+          ),
+        );
+      } else {
+        console.warn("Unsupported clipboard content type:", mimeType);
+      }
     },
   );
 
@@ -184,11 +198,22 @@ class MainWindow extends Gtk.ApplicationWindow {
           `text: ${text.length > 30 ? (`${text.slice(0, 30)} ...`) : text}`,
         );
         worker.postMessage({ type: "text", content: text });
-      } else {
-        console.warn("Unhandled mimetype:", mimeType);
       }
     } else {
       console.warn("No text found in clipboard");
+    }
+  };
+
+  #onImageReceived = (result: Gio_.AsyncResult) => {
+    const texture = this.#clipboard.read_texture_finish(result);
+    if (texture) {
+      this.#label.set_text("image: Pasted image");
+      // Save the texture as a temporary file
+      const tempFilePath = Deno.makeTempFileSync({ suffix: ".png" });
+      texture.save_to_png(tempFilePath);
+      worker.postMessage({ type: "file", path: tempFilePath });
+    } else {
+      console.warn("No image found in clipboard");
     }
   };
 
