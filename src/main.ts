@@ -107,7 +107,7 @@ class MainWindow extends Gtk.ApplicationWindow {
           console.warn("Could not detect filename from this path:", filePath);
           return false;
         }
-        this.#label.set_text("file: " + fileName);
+        this.#label.set_text(`file: ${fileName}`);
         worker.postMessage({ type: "file", path: filePath });
         return true;
       }
@@ -176,13 +176,12 @@ class MainWindow extends Gtk.ApplicationWindow {
         // This is a file URI
         const filePath = text.replace("file://", "").trim();
         const fileName = filePath.split("/").pop();
-        this.#label.set_text("file: " + fileName || "Pasted file");
+        this.#label.set_text(`file: ${fileName || "Pasted file"}`);
         worker.postMessage({ type: "file", path: filePath });
       } else if (mimeType.startsWith("text/plain")) {
         // This is plain text
         this.#label.set_text(
-          "text: " +
-            (text.length > 30 ? (text.slice(0, 30) + " ...") : text),
+          `text: ${text.length > 30 ? (`${text.slice(0, 30)} ...`) : text}`,
         );
         worker.postMessage({ type: "text", content: text });
       } else {

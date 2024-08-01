@@ -73,13 +73,16 @@ if (import.meta.main) {
         return new Response(textContent, {
           headers: { "Content-Type": "text/plain" },
         });
-      } else if (filePath) {
+      }
+
+      if (filePath) {
         console.log("[worker] serving file:", filePath);
         try {
           const meta = await Deno.stat(filePath);
           if (meta.isFile) {
             return serveFile(req, filePath);
-          } else if (meta.isDirectory) {
+          }
+          if (meta.isDirectory) {
             return serveDir(req, {
               fsRoot: filePath,
               showDirListing: true,
