@@ -1,4 +1,4 @@
-import { Callback } from "../mod.ts";
+import { Callback, Gio2_ as Gio } from "../mod.ts";
 
 export interface Gdk {
   Display: Display;
@@ -27,7 +27,14 @@ export enum DragAction {
 
 export interface Clipboard {
   read_text_async: (cancellable: any, callback: Callback) => void;
-  read_text_finish: (result: any) => { valueOf: () => string };
+  read_text_finish: (result: Gio.AsyncResult) => { valueOf: () => string };
+  read_async: (
+    mimeTypes: string[],
+    io_priority: number,
+    cancellable: any,
+    callback: Callback,
+  ) => void;
+  read_finish: (result: Gio.AsyncResult) => [any, { valueOf: () => string }];
 }
 
 export enum ModifierType {
