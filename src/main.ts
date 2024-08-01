@@ -107,7 +107,7 @@ class MainWindow extends Gtk.ApplicationWindow {
           console.warn("Could not detect filename from this path:", filePath);
           return false;
         }
-        this.#label.set_text(fileName);
+        this.#label.set_text("file: " + fileName);
         worker.postMessage({ type: "file", path: filePath });
         return true;
       }
@@ -139,22 +139,59 @@ class MainWindow extends Gtk.ApplicationWindow {
   );
 
   #handlePaste = () => {
-    this.#clipboard.read_text_async(null, this.#onTextReceived);
+    this.#clipboard.read_async(
+      // NOTE: order matters!
+      [
+        "text/uri-list",
+        "text/plain",
+        "text/plain;charset=utf-8",
+      ],
+      GLib.PRIORITY_HIGH,
+      null,
+      this.#onClipboardRead,
+    );
   };
 
-  #onTextReceived = python.callback(
+  #onClipboardRead = python.callback(
     // deno-lint-ignore no-explicit-any
-    (_: any, _clipboard: Gdk_.Clipboard, result: Gio_.AsyncResult) => {
-      const text = this.#clipboard.read_text_finish(result).valueOf();
-
-      if (text) {
-        this.#label.set_text(text);
-        worker.postMessage({ type: "text", content: text });
-      } else {
-        console.warn("No text found in clipboard");
-      }
+    (_: any, clipboard: Gdk_.Clipboard, result: Gio_.AsyncResult) => {
+      const [_inputStream, value] = clipboard.read_finish(result);
+      const mimeType = value.valueOf();
+      clipboard.read_text_async(
+        null,
+        python.callback(
+          // deno-lint-ignore no-explicit-any
+          (_: any, _clipboard: Gdk_.Clipboard, result: Gio_.AsyncResult) =>
+            this.#onTextReceived(result, mimeType),
+        ),
+      );
     },
   );
+
+  // deno-lint-ignore no-explicit-any
+  #onTextReceived = (result: any, mimeType: string) => {
+    const text = this.#clipboard.read_text_finish(result).valueOf();
+    if (text) {
+      if (mimeType.startsWith("text/uri-list")) {
+        // This is a file URI
+        const filePath = text.replace("file://", "").trim();
+        const fileName = filePath.split("/").pop();
+        this.#label.set_text("file: " + fileName || "Pasted file");
+        worker.postMessage({ type: "file", path: filePath });
+      } else if (mimeType.startsWith("text/plain")) {
+        // This is plain text
+        this.#label.set_text(
+          "text: " +
+            (text.length > 30 ? (text.slice(0, 30) + " ...") : text),
+        );
+        worker.postMessage({ type: "text", content: text });
+      } else {
+        console.warn("Unhandled mimetype:", mimeType);
+      }
+    } else {
+      console.warn("No text found in clipboard");
+    }
+  };
 
   #onCloseRequest = () => {
     worker.terminate();

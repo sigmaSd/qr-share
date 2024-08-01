@@ -75,14 +75,20 @@ if (import.meta.main) {
         });
       } else if (filePath) {
         console.log("[worker] serving file:", filePath);
-        const meta = await Deno.stat(filePath);
-        if (meta.isFile) {
-          return serveFile(req, filePath);
+        try {
+          const meta = await Deno.stat(filePath);
+          if (meta.isFile) {
+            return serveFile(req, filePath);
+          } else if (meta.isDirectory) {
+            return serveDir(req, {
+              fsRoot: filePath,
+              showDirListing: true,
+            });
+          }
+        } catch (error) {
+          console.error("[worker] Error accessing file:", error);
+          return new Response("File not found", { status: 404 });
         }
-        return serveDir(req, {
-          fsRoot: filePath,
-          showDirListing: true,
-        });
       }
 
       // This should never happen, but just in case
