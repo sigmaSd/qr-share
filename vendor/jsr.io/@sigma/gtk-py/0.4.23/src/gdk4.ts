@@ -18,6 +18,10 @@ export interface Display {
   get_clipboard(): Clipboard;
 }
 
+export interface Texture {
+  save_to_png: (filename: string) => void;
+}
+
 export enum DragAction {
   COPY = 1,
   MOVE = 2,
@@ -35,6 +39,11 @@ export interface Clipboard {
     callback: Callback,
   ) => void;
   read_finish: (result: Gio.AsyncResult) => [any, { valueOf: () => string }];
+  read_texture_async: (
+    cancellable: any,
+    callback: Callback,
+  ) => void;
+  read_texture_finish: (result: Gio.AsyncResult) => Texture;
 }
 
 export enum ModifierType {
