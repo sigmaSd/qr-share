@@ -1,24 +1,36 @@
 {
   "manifest": {
-    "/README.md": {
-      "size": 2237,
-      "checksum": "sha256-8808fd0003cf47e8b8ba4d7c314506e056aaf2d3eb753805521bd0c5c0235a50"
-    },
-    "/src/gtk4.ts": {
-      "size": 7211,
-      "checksum": "sha256-d7b99f1299192230c0b9546c7024072c9b4807f92083676484ba356d7f592867"
-    },
-    "/src/gio2.ts": {
-      "size": 2627,
-      "checksum": "sha256-eb0afdfea26ac6f72a6f9676b4917416afc9d4d6502b878e21990bd0c8038f68"
-    },
     "/LICENSE": {
       "size": 1064,
       "checksum": "sha256-be4b818e4d843278f422cfc2dd04670e4862c99acbdfd6565af672724b2b3e50"
     },
-    "/examples/simple/main.ts": {
-      "size": 1307,
-      "checksum": "sha256-e68ec1ec5c9b2dd91299d1771c691f1df3dcf538d371c97e79b682d74a428ea4"
+    "/examples/builder/ui.xml": {
+      "size": 1127,
+      "checksum": "sha256-e72670cf6061649d44b33cf6022eef1f9ca9170c1a1f974f685aa9a48e0de635"
+    },
+    "/src/gdk4.ts": {
+      "size": 1041,
+      "checksum": "sha256-128c49dd29149eab08161e83b632c73ab9e745319408970ff1b67e191c23d4f0"
+    },
+    "/biome.json": {
+      "size": 160,
+      "checksum": "sha256-b3510f7734e537be5adaa6d10db00b0f1589489e202ada041d218e770af904fd"
+    },
+    "/README.md": {
+      "size": 2237,
+      "checksum": "sha256-8808fd0003cf47e8b8ba4d7c314506e056aaf2d3eb753805521bd0c5c0235a50"
+    },
+    "/src/gobject2.ts": {
+      "size": 168,
+      "checksum": "sha256-832ee3eeb7cc0772f38899073c58317ea1d1fe3b2869b9d0fa85a79866c8fff5"
+    },
+    "/src/gio2.ts": {
+      "size": 2681,
+      "checksum": "sha256-fc4d7c7b3e165f9b8d69e2d438d63e347ae8f52ebe2e8fbdd5d1a805da517c5e"
+    },
+    "/examples/smoke/style.css": {
+      "size": 87,
+      "checksum": "sha256-152d6e9519d9d4434cfe137fabdabe85cd1279dcd25a984b7488ec21378d4cdb"
     },
     "/examples/builder/main.ts": {
       "size": 1284,
@@ -28,64 +40,71 @@
       "size": 2649,
       "checksum": "sha256-b6c9a8181fbcdb2fa877a132d4181374901d6fd70cfdc32009527e24e2f0ac33"
     },
-    "/scripts/update_apis.ts": {
-      "size": 788,
-      "checksum": "sha256-f32a99371d2375d07fd651c9b47c61094c531cffce46e197db62507b1f79a836"
-    },
-    "/src/gobject2.ts": {
-      "size": 168,
-      "checksum": "sha256-832ee3eeb7cc0772f38899073c58317ea1d1fe3b2869b9d0fa85a79866c8fff5"
-    },
-    "/biome.json": {
-      "size": 160,
-      "checksum": "sha256-b3510f7734e537be5adaa6d10db00b0f1589489e202ada041d218e770af904fd"
-    },
-    "/src/adw1.ts": {
-      "size": 3895,
-      "checksum": "sha256-9f15785244d57474c724ebb5e81818d9ab002b1d00e86c061aa1764381a57107"
-    },
-    "/deno.json": {
-      "size": 399,
-      "checksum": "sha256-3699be5a40ec04d69c98a1df0d0c7a9ac86add937a5f1f5c6e86e697bd0b5c15"
-    },
-    "/src/appindicator3.ts": {
-      "size": 1078,
-      "checksum": "sha256-123faa6890e2fb7a8ea875212677b253d22f5fab894843e0039b7e6c2f01142b"
-    },
-    "/src/gdk4.ts": {
-      "size": 1041,
-      "checksum": "sha256-128c49dd29149eab08161e83b632c73ab9e745319408970ff1b67e191c23d4f0"
-    },
-    "/.github/workflows/publish-jsr.yml": {
-      "size": 267,
-      "checksum": "sha256-dbedb4bc0736138a0daed7f029e0fb758c5ac22bb8be0c8f0518c5fd46243104"
-    },
-    "/src/glib2.ts": {
-      "size": 462,
-      "checksum": "sha256-ab82566a3e96a49b45f607e9e2e02a60c191c4e8b87db1448feef20330f4e200"
-    },
     "/src/gtk3.ts": {
       "size": 656,
       "checksum": "sha256-49d24ebe3c0669a74675f314e789828456c6b52a3b8489fae2d3d3bbaec2fe28"
+    },
+    "/scripts/update_apis.ts": {
+      "size": 788,
+      "checksum": "sha256-f32a99371d2375d07fd651c9b47c61094c531cffce46e197db62507b1f79a836"
     },
     "/deno.lock": {
       "size": 25465,
       "checksum": "sha256-a990d44ba74ccd2898bf5e77e7a167ab2f270d91fec890712b84b80f76c3a06a"
     },
-    "/examples/builder/ui.xml": {
-      "size": 1127,
-      "checksum": "sha256-e72670cf6061649d44b33cf6022eef1f9ca9170c1a1f974f685aa9a48e0de635"
+    "/src/adw1.ts": {
+      "size": 3895,
+      "checksum": "sha256-9f15785244d57474c724ebb5e81818d9ab002b1d00e86c061aa1764381a57107"
+    },
+    "/src/glib2.ts": {
+      "size": 462,
+      "checksum": "sha256-ab82566a3e96a49b45f607e9e2e02a60c191c4e8b87db1448feef20330f4e200"
+    },
+    "/examples/simple/main.ts": {
+      "size": 1307,
+      "checksum": "sha256-e68ec1ec5c9b2dd91299d1771c691f1df3dcf538d371c97e79b682d74a428ea4"
     },
     "/examples/smoke/main.ts": {
       "size": 11531,
       "checksum": "sha256-fe3be3d0f2a33bb5ecfac7cb0e5b28385c4bb6d330db3ed44a2d8a5ff9bbe89c"
     },
-    "/examples/smoke/style.css": {
-      "size": 87,
-      "checksum": "sha256-152d6e9519d9d4434cfe137fabdabe85cd1279dcd25a984b7488ec21378d4cdb"
+    "/deno.json": {
+      "size": 399,
+      "checksum": "sha256-c4c073878abfb76f9708de4dfffb97d98d3ca0a155818dcabb2b66d417d51f90"
+    },
+    "/src/appindicator3.ts": {
+      "size": 1078,
+      "checksum": "sha256-123faa6890e2fb7a8ea875212677b253d22f5fab894843e0039b7e6c2f01142b"
+    },
+    "/.github/workflows/publish-jsr.yml": {
+      "size": 267,
+      "checksum": "sha256-dbedb4bc0736138a0daed7f029e0fb758c5ac22bb8be0c8f0518c5fd46243104"
+    },
+    "/src/gtk4.ts": {
+      "size": 7211,
+      "checksum": "sha256-d7b99f1299192230c0b9546c7024072c9b4807f92083676484ba356d7f592867"
     }
   },
   "moduleGraph2": {
+    "/src/gdk4.ts": {
+      "dependencies": [
+        {
+          "type": "static",
+          "kind": "import",
+          "specifier": "../mod.ts",
+          "specifierRange": [
+            [
+              0,
+              39
+            ],
+            [
+              0,
+              50
+            ]
+          ]
+        }
+      ]
+    },
     "/src/glib2.ts": {
       "dependencies": [
         {
@@ -105,39 +124,20 @@
         }
       ]
     },
-    "/src/adw1.ts": {
+    "/src/gtk3.ts": {
       "dependencies": [
         {
           "type": "static",
           "kind": "importType",
-          "specifier": "../mod.ts",
+          "specifier": "jsr:@denosaurs/python@0.4.3",
           "specifierRange": [
             [
-              7,
-              7
+              0,
+              45
             ],
             [
-              7,
-              18
-            ]
-          ]
-        }
-      ]
-    },
-    "/src/gtk4.ts": {
-      "dependencies": [
-        {
-          "type": "static",
-          "kind": "importType",
-          "specifier": "../mod.ts",
-          "specifierRange": [
-            [
-              8,
-              7
-            ],
-            [
-              8,
-              18
+              0,
+              74
             ]
           ]
         }
@@ -176,25 +176,6 @@
             [
               0,
               37
-            ]
-          ]
-        }
-      ]
-    },
-    "/src/gdk4.ts": {
-      "dependencies": [
-        {
-          "type": "static",
-          "kind": "import",
-          "specifier": "../mod.ts",
-          "specifierRange": [
-            [
-              0,
-              39
-            ],
-            [
-              0,
-              50
             ]
           ]
         }
@@ -339,25 +320,6 @@
         }
       ]
     },
-    "/src/gtk3.ts": {
-      "dependencies": [
-        {
-          "type": "static",
-          "kind": "importType",
-          "specifier": "jsr:@denosaurs/python@0.4.3",
-          "specifierRange": [
-            [
-              0,
-              45
-            ],
-            [
-              0,
-              74
-            ]
-          ]
-        }
-      ]
-    },
     "/src/gobject2.ts": {
       "dependencies": [
         {
@@ -372,6 +334,44 @@
             [
               0,
               41
+            ]
+          ]
+        }
+      ]
+    },
+    "/src/adw1.ts": {
+      "dependencies": [
+        {
+          "type": "static",
+          "kind": "importType",
+          "specifier": "../mod.ts",
+          "specifierRange": [
+            [
+              7,
+              7
+            ],
+            [
+              7,
+              18
+            ]
+          ]
+        }
+      ]
+    },
+    "/src/gtk4.ts": {
+      "dependencies": [
+        {
+          "type": "static",
+          "kind": "importType",
+          "specifier": "../mod.ts",
+          "specifierRange": [
+            [
+              8,
+              7
+            ],
+            [
+              8,
+              18
             ]
           ]
         }

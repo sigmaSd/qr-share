@@ -8,7 +8,7 @@ import {
   kw,
   NamedArgument,
   python,
-} from "jsr:@sigma/gtk-py@0.4.23";
+} from "jsr:@sigma/gtk-py@0.4.24";
 
 const gi = python.import("gi");
 gi.require_version("Gtk", "4.0");
@@ -108,11 +108,13 @@ class MainWindow extends Gtk.ApplicationWindow {
         fileName = filePath.split("/").pop() ?? null;
       } else {
         // Handle file without a path
-        const [success, contents] = file.load_contents(null);
+        const [success, contents] = file.load_contents();
         if (success.valueOf()) {
           fileName = "Dropped File";
           filePath = Deno.makeTempFileSync();
-          Deno.writeFileSync(
+          // keep writeFile async, so it dones't block the ui
+          // somehow it works with gio event loop
+          Deno.writeFile(
             filePath,
             new Uint8Array(python.list(contents).valueOf()),
           );

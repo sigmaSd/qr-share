@@ -42,6 +42,7 @@ export interface ListModel {
 export interface File {
   new_for_uri(uri: string): File;
   get_path(): { valueOf: () => string };
+  load_contents(): [{ valueOf: () => boolean }, any];
 }
 
 export interface Subprocess {
