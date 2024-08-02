@@ -15,7 +15,7 @@
       <li>Instant file sharing with simple drag-and-drop functionality</li>
       <li>Receiver needs only a QR code scanner - no additional software required</li>
       <li>Ability to drop directories to view and selectively download contained files</li>
-      <li>Share files from the clipboard, automatically detect if the clipboard contains a file path, an image, or a text</li>
+      <li>Share data from the clipboard, automatically detect if the clipboard contains an image, or a text, note that pasting files will only send paths as text, so its better to drop them instead</li>
     </ul>
     <p>Share makes file transfer hassle-free, whether you're sharing documents, images, or any other file type. Simply drop a file into the application. Scan the QR code with another device to initiate the transfer.</p>
   </description>
@@ -35,6 +35,11 @@
   <content_rating type="oars-1.1" />
 
   <releases>
+    <release version="0.1.11" date="2024-08-03">
+      <description>
+       <p>Ctrl-v pasting files now only send paths as text, because otherwise it would require read permission to the filesystem</p>
+      </description>
+    </release>
     <release version="0.1.10" date="2024-08-02">
       <description>
         <p>Handle files without a path</p>
