@@ -58,44 +58,66 @@ if (import.meta.main) {
         );
       },
     }, async (req): Promise<Response> => {
+      // Disable caching
+      const headers = new Headers({
+        "Cache-Control":
+          "no-store, no-cache, must-revalidate, proxy-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+      });
+
       if (!filePath && !textContent) {
+        headers.set("Content-Type", "text/html");
         return new Response(emptyPage, {
           status: 404,
-          headers: { "Content-Type": "text/html" },
+          headers: headers,
         });
       }
       if (new URL(req.url).pathname !== "/") {
-        return new Response("Not Found", { status: 404 });
+        return new Response("Not Found", { status: 404, headers });
       }
 
       if (textContent) {
         console.log("[worker] serving text content");
-        return new Response(textContent, {
-          headers: { "Content-Type": "text/plain" },
-        });
+        return new Response(textContent, { headers });
       }
 
       if (filePath) {
         console.log("[worker] serving file:", filePath);
         try {
           const meta = await Deno.stat(filePath);
+          let response;
           if (meta.isFile) {
-            return serveFile(req, filePath);
-          }
-          if (meta.isDirectory) {
-            return serveDir(req, {
+            response = await serveFile(req, filePath);
+          } else {
+            response = await serveDir(req, {
               fsRoot: filePath,
               showDirListing: true,
             });
           }
+
+          // Clone headers from the original response
+          const responseHeaders = new Headers(response.headers);
+
+          // Update headers with the custom headers
+          headers.forEach((value, key) => {
+            responseHeaders.set(key, value);
+          });
+
+          // Return the new response with the updated headers
+          return new Response(response.body, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: responseHeaders,
+          });
         } catch (error) {
           console.error("[worker] Error accessing file:", error);
-          return new Response("File not found", { status: 404 });
+          return new Response("File not found", { status: 404, headers });
         }
       }
 
       // This should never happen, but just in case
-      return new Response("Internal Server Error", { status: 500 });
+      return new Response("Internal Server Error", { status: 500, headers });
     });
     //@ts-ignore worker
     self.postMessage({ type: "start" });
