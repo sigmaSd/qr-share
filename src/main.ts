@@ -210,8 +210,11 @@ class MainWindow extends Gtk.ApplicationWindow {
         // This is a file URI
         const filePath = text.replace("file://", "").trim();
         const fileName = filePath.split("/").pop();
-        this.#label.set_text(`file: ${fileName || "Pasted file"}`);
-        worker.postMessage({ type: "file", path: filePath });
+        // NOTE: the original idea is to send the file
+        // This works, but not in flatpak becasue it will need read permission to the user filesystem, unlinke drop event which automagiclt transfers the file to the app sandbox
+        // So unfortantly we just send the filepath as text
+        this.#label.set_text(`text: ${fileName || "Pasted file"}`);
+        worker.postMessage({ type: "text", content: filePath });
       } else if (mimeType.startsWith("text/plain")) {
         // This is plain text
         this.#label.set_text(
