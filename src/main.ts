@@ -100,18 +100,36 @@ class MainWindow extends Gtk.ApplicationWindow {
 
   #onDrop = python.callback(
     (_a1: object, _dropTarget: Gtk_.DropTarget, file: Gio_.File) => {
-      const filePath: string = file.get_path().valueOf();
-      if (filePath) {
-        const fileName = filePath.split("/").pop();
-        if (!fileName) {
-          console.warn("Could not detect filename from this path:", filePath);
+      let filePath;
+      let fileName;
+
+      if (typeof file.get_path().valueOf() === "string") {
+        filePath = file.get_path().valueOf();
+        fileName = filePath.split("/").pop() ?? null;
+      } else {
+        // Handle file without a path
+        const [success, contents] = file.load_contents(null);
+        if (success.valueOf()) {
+          fileName = "Dropped File";
+          filePath = Deno.makeTempFileSync();
+          Deno.writeFileSync(
+            filePath,
+            new Uint8Array(python.list(contents).valueOf()),
+          );
+        } else {
+          console.warn("Failed to read contents of the dropped file");
           return false;
         }
-        this.#label.set_text(`file: ${fileName}`);
-        worker.postMessage({ type: "file", path: filePath });
-        return true;
       }
-      return false;
+
+      if (!fileName) {
+        console.warn("Could not detect filename from this file");
+        return false;
+      }
+
+      this.#label.set_text(`file: ${fileName}`);
+      worker.postMessage({ type: "file", path: filePath });
+      return true;
     },
   );
 
