@@ -1,0 +1,11 @@
+#!/usr/bin/env -S deno run --no-lock --no-config -A
+import { $ } from "jsr:@david/dax@0.41.0";
+
+// get the app version
+const version = await import("../deno.json", { with: { type: "json" } })
+  .then((meta) => meta.default.version);
+
+$.setPrintCommand(true);
+await $`git add . && git commit -m ${version} && git tag -a ${version} -m ${version}`;
+prompt("Press enter to push");
+await $`git push --follow-tags`;

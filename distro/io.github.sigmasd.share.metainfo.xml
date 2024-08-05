@@ -35,6 +35,12 @@
   <content_rating type="oars-1.1" />
 
   <releases>
+    <release version="0.1.12" date="2024-08-05">
+      <description>
+        <p>Add About menu</p>
+        <p>Add ctrl-q and ctrl-w shortcuts to close the app</p>
+      </description>
+    </release>
     <release version="0.1.11" date="2024-08-03">
       <description>
        <p>Ctrl-v pasting files now only send paths as text, because otherwise it would require read permission to the filesystem</p>
