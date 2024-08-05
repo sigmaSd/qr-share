@@ -1,6 +1,7 @@
 #!/usr/bin/env -S deno run --allow-all --unstable-ffi
 import {
   type Adw1_ as Adw_,
+  Callback,
   type Gdk4_ as Gdk_,
   type Gio2_ as Gio_,
   type GLib2_ as GLib_,
@@ -9,6 +10,7 @@ import {
   NamedArgument,
   python,
 } from "jsr:@sigma/gtk-py@0.4.24";
+import meta from "../deno.json" with { type: "json" };
 
 const gi = python.import("gi");
 gi.require_version("Gtk", "4.0");
@@ -25,6 +27,7 @@ const worker = new Worker(new URL("./main.worker.ts", import.meta.url).href, {
 const qrPath = Deno.makeTempFileSync();
 
 class MainWindow extends Gtk.ApplicationWindow {
+  #app: Adw_.Application;
   #label: Gtk_.Label;
   #picture: Gtk_.Picture;
   #dropTarget: Gtk_.DropTarget;
@@ -36,6 +39,11 @@ class MainWindow extends Gtk.ApplicationWindow {
     this.set_title("Share");
     this.set_default_size(400, 400);
     this.connect("close-request", python.callback(this.#onCloseRequest));
+
+    this.#app = kwArg.value.valueOf() as Adw_.Application;
+
+    this.#createHeaderBar();
+    this.#createShortcuts();
 
     // Initialize clipboard
     this.#clipboard = Gdk.Display.get_default().get_clipboard();
@@ -97,6 +105,68 @@ class MainWindow extends Gtk.ApplicationWindow {
     keyController.connect("key-pressed", this.#onKeyPressed);
     this.add_controller(keyController);
   }
+
+  #createHeaderBar = () => {
+    const header = Gtk.HeaderBar();
+    this.set_titlebar(header);
+    // menu
+    const menu = Gio.Menu.new();
+    const popover = Gtk.PopoverMenu();
+    popover.set_menu_model(menu);
+    const hamburger = Gtk.MenuButton();
+    hamburger.set_primary(true);
+    hamburger.set_popover(popover);
+    hamburger.set_icon_name("open-menu-symbolic");
+    hamburger.set_tooltip_text("Main Menu");
+    header.pack_start(hamburger);
+
+    this.#createAction("about", this.#showAbout);
+    menu.append("About Share", "app.about");
+  };
+
+  #createShortcuts = () => {
+    this.#createAction(
+      "quit",
+      python.callback(() => {
+        this.#onCloseRequest();
+        this.#app.quit();
+      }),
+      ["<primary>q"],
+    );
+    this.#createAction(
+      "close",
+      python.callback(() => {
+        this.#onCloseRequest();
+        this.#app.quit();
+      }),
+      ["<primary>w"],
+    );
+  };
+
+  #createAction = (name: string, callback: Callback, shortcuts?: [string]) => {
+    const action = Gio.SimpleAction.new(name);
+    action.connect("activate", callback);
+    this.#app.add_action(action);
+    if (shortcuts) this.#app.set_accels_for_action(`app.${name}`, shortcuts);
+  };
+
+  #showAbout = python.callback(() => {
+    const dialog = Adw.AboutWindow(
+      new NamedArgument("transient_for", this.#app.get_active_window()),
+    );
+    dialog.set_application_name("Share");
+    dialog.set_version(meta.version);
+    dialog.set_developer_name("Bedis Nbiba");
+    dialog.set_developers(["Bedis Nbiba <bedisnbiba@gmail.com>"]);
+    dialog.set_license_type(Gtk.License.MIT_X11);
+    dialog.set_website("https://github.com/sigmaSd/share");
+    dialog.set_issue_url(
+      "https://github.com/sigmaSd/share/issues",
+    );
+    dialog.set_application_icon("io.github.sigmasd.share");
+
+    dialog.set_visible(true);
+  });
 
   #onDrop = python.callback(
     (_a1: object, _dropTarget: Gtk_.DropTarget, file: Gio_.File) => {
@@ -255,7 +325,7 @@ class App extends Adw.Application {
     this.connect("activate", this.onActivate);
   }
 
-  onActivate = python.callback((_kwarg, app: Gtk_.Application) => {
+  onActivate = python.callback((_kwarg, app: Adw_.Application) => {
     this.#win = new MainWindow(new NamedArgument("application", app));
     this.#win.present();
   });
