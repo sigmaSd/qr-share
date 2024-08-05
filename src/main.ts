@@ -159,9 +159,9 @@ class MainWindow extends Gtk.ApplicationWindow {
     dialog.set_developer_name("Bedis Nbiba");
     dialog.set_developers(["Bedis Nbiba <bedisnbiba@gmail.com>"]);
     dialog.set_license_type(Gtk.License.MIT_X11);
-    dialog.set_website("https://github.com/sigmaSd/share");
+    dialog.set_website("https://github.com/sigmaSd/qr-share");
     dialog.set_issue_url(
-      "https://github.com/sigmaSd/share/issues",
+      "https://github.com/sigmaSd/qr-share/issues",
     );
     dialog.set_application_icon("io.github.sigmasd.share");
 
