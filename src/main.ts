@@ -10,6 +10,7 @@ import {
   NamedArgument,
   python,
 } from "jsr:@sigma/gtk-py@0.4.24";
+import meta from "../deno.json" with { type: "json" };
 
 const gi = python.import("gi");
 gi.require_version("Gtk", "4.0");
@@ -39,7 +40,7 @@ class MainWindow extends Gtk.ApplicationWindow {
     this.set_default_size(400, 400);
     this.connect("close-request", python.callback(this.#onCloseRequest));
 
-    this.#app = kwArg.value as Adw_.Application;
+    this.#app = kwArg.value.valueOf() as Adw_.Application;
 
     const header = Gtk.HeaderBar();
     this.set_titlebar(header);
@@ -56,18 +57,22 @@ class MainWindow extends Gtk.ApplicationWindow {
 
     this.#createAction("about", this.#showAbout);
     menu.append("About Share", "app.about");
-    console.log(5);
-    // this.#createAction(
-    //   "quit",
-    //   python.callback(this.#onCloseRequest),
-    //   ["<primary>q"],
-    // );
-    // this.#createAction(
-    //   "close",
-    //   python.callback(this.#onCloseRequest),
-    //   ["<primary>w"],
-    // );
-    console.log(6);
+    this.#createAction(
+      "quit",
+      python.callback(() => {
+        this.#onCloseRequest();
+        this.#app.quit();
+      }),
+      ["<primary>q"],
+    );
+    this.#createAction(
+      "close",
+      python.callback(() => {
+        this.#onCloseRequest();
+        this.#app.quit();
+      }),
+      ["<primary>w"],
+    );
 
     // Initialize clipboard
     this.#clipboard = Gdk.Display.get_default().get_clipboard();
@@ -132,12 +137,9 @@ class MainWindow extends Gtk.ApplicationWindow {
 
   #createAction = (name: string, callback: Callback, shortcuts?: [string]) => {
     const action = Gio.SimpleAction.new(name);
-    console.log(3);
     action.connect("activate", callback);
-    console.log(4, name, action, this.#app.add_action);
-    this.add_action(action);
-    console.log(5);
-    if (shortcuts) this.#app.set_accels_for_action(`window.${name}`, shortcuts);
+    this.#app.add_action(action);
+    if (shortcuts) this.#app.set_accels_for_action(`app.${name}`, shortcuts);
   };
 
   #showAbout = python.callback(() => {
@@ -145,7 +147,7 @@ class MainWindow extends Gtk.ApplicationWindow {
       new NamedArgument("transient_for", this.#app.get_active_window()),
     );
     dialog.set_application_name("Share");
-    dialog.set_version("0.1.10");
+    dialog.set_version(meta.version);
     dialog.set_developer_name("Bedis Nbiba");
     dialog.set_developers(["Bedis Nbiba <bedisnbiba@gmail.com>"]);
     dialog.set_license_type(Gtk.License.MIT_X11);
@@ -153,7 +155,7 @@ class MainWindow extends Gtk.ApplicationWindow {
     dialog.set_issue_url(
       "https://github.com/sigmaSd/share/issues",
     );
-    dialog.set_application_icon("io.github.sigmasd.shre");
+    dialog.set_application_icon("io.github.sigmasd.share");
 
     dialog.set_visible(true);
   });
@@ -313,7 +315,6 @@ class App extends Adw.Application {
   }
 
   onActivate = python.callback((_kwarg, app: Adw_.Application) => {
-    console.log(app);
     this.#win = new MainWindow(new NamedArgument("application", app));
     this.#win.present();
   });
