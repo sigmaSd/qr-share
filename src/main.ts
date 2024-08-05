@@ -42,37 +42,8 @@ class MainWindow extends Gtk.ApplicationWindow {
 
     this.#app = kwArg.value.valueOf() as Adw_.Application;
 
-    const header = Gtk.HeaderBar();
-    this.set_titlebar(header);
-    // menu
-    const menu = Gio.Menu.new();
-    const popover = Gtk.PopoverMenu();
-    popover.set_menu_model(menu);
-    const hamburger = Gtk.MenuButton();
-    hamburger.set_primary(true);
-    hamburger.set_popover(popover);
-    hamburger.set_icon_name("open-menu-symbolic");
-    hamburger.set_tooltip_text("Main Menu");
-    header.pack_start(hamburger);
-
-    this.#createAction("about", this.#showAbout);
-    menu.append("About Share", "app.about");
-    this.#createAction(
-      "quit",
-      python.callback(() => {
-        this.#onCloseRequest();
-        this.#app.quit();
-      }),
-      ["<primary>q"],
-    );
-    this.#createAction(
-      "close",
-      python.callback(() => {
-        this.#onCloseRequest();
-        this.#app.quit();
-      }),
-      ["<primary>w"],
-    );
+    this.#createHeaderBar();
+    this.#createShortcuts();
 
     // Initialize clipboard
     this.#clipboard = Gdk.Display.get_default().get_clipboard();
@@ -134,6 +105,43 @@ class MainWindow extends Gtk.ApplicationWindow {
     keyController.connect("key-pressed", this.#onKeyPressed);
     this.add_controller(keyController);
   }
+
+  #createHeaderBar = () => {
+    const header = Gtk.HeaderBar();
+    this.set_titlebar(header);
+    // menu
+    const menu = Gio.Menu.new();
+    const popover = Gtk.PopoverMenu();
+    popover.set_menu_model(menu);
+    const hamburger = Gtk.MenuButton();
+    hamburger.set_primary(true);
+    hamburger.set_popover(popover);
+    hamburger.set_icon_name("open-menu-symbolic");
+    hamburger.set_tooltip_text("Main Menu");
+    header.pack_start(hamburger);
+
+    this.#createAction("about", this.#showAbout);
+    menu.append("About Share", "app.about");
+  };
+
+  #createShortcuts = () => {
+    this.#createAction(
+      "quit",
+      python.callback(() => {
+        this.#onCloseRequest();
+        this.#app.quit();
+      }),
+      ["<primary>q"],
+    );
+    this.#createAction(
+      "close",
+      python.callback(() => {
+        this.#onCloseRequest();
+        this.#app.quit();
+      }),
+      ["<primary>w"],
+    );
+  };
 
   #createAction = (name: string, callback: Callback, shortcuts?: [string]) => {
     const action = Gio.SimpleAction.new(name);
