@@ -56,6 +56,8 @@ if (import.meta.main) {
           qrPath,
           qrPng(new TextEncoder().encode(serverAddr)),
         );
+        //@ts-ignore worker
+        self.postMessage({ type: "start", url: serverAddr });
       },
     }, async (req): Promise<Response> => {
       // Disable caching
@@ -119,8 +121,6 @@ if (import.meta.main) {
       // This should never happen, but just in case
       return new Response("Internal Server Error", { status: 500, headers });
     });
-    //@ts-ignore worker
-    self.postMessage({ type: "start" });
   };
 
   //@ts-ignore worker

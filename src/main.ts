@@ -9,7 +9,7 @@ import {
   kw,
   NamedArgument,
   python,
-} from "jsr:@sigma/gtk-py@0.4.24";
+} from "jsr:@sigma/gtk-py@0.4.26";
 import meta from "../deno.json" with { type: "json" };
 
 const gi = python.import("gi");
@@ -28,14 +28,19 @@ const qrPath = Deno.makeTempFileSync();
 
 class MainWindow extends Gtk.ApplicationWindow {
   #app: Adw_.Application;
+  #url: string;
   #label: Gtk_.Label;
   #picture: Gtk_.Picture;
   #dropTarget: Gtk_.DropTarget;
   #contentBox: Gtk_.Box;
   #clipboard: Gdk_.Clipboard;
+  #urlBox!: Gtk_.Box;
+  #urlLabel!: Gtk_.Label;
+  #copyButton!: Gtk_.Button;
 
-  constructor(kwArg: NamedArgument) {
+  constructor(kwArg: NamedArgument, url: string) {
     super(kwArg);
+    this.#url = url;
     this.set_title("Share");
     this.set_default_size(400, 400);
     this.connect("close-request", python.callback(this.#onCloseRequest));
@@ -64,8 +69,16 @@ class MainWindow extends Gtk.ApplicationWindow {
   background-color: #ffffff;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  margin: 10px;
   padding: 20px;
+}
+.url-box {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333333;
+  margin-top: 10px;
+  padding: 5px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
 }`);
     Gtk.StyleContext.add_provider_for_display(
       Gdk.Display.get_default(),
@@ -86,10 +99,13 @@ class MainWindow extends Gtk.ApplicationWindow {
     this.#picture.set_size_request(200, 200);
     this.#picture.set_keep_aspect_ratio(true);
 
+    this.#createUrlBox();
+
     this.#contentBox = Gtk.Box(kw`orientation=${Gtk.Orientation.VERTICAL}`);
     this.#contentBox.get_style_context().add_class("content-box");
     this.#contentBox.append(this.#label);
     this.#contentBox.append(this.#picture);
+    this.#contentBox.append(this.#urlBox);
 
     this.set_child(this.#contentBox);
 
@@ -105,6 +121,34 @@ class MainWindow extends Gtk.ApplicationWindow {
     keyController.connect("key-pressed", this.#onKeyPressed);
     this.add_controller(keyController);
   }
+
+  #createUrlBox = () => {
+    this.#urlBox = Gtk.Box(kw`orientation=${Gtk.Orientation.HORIZONTAL}`);
+    this.#urlBox.set_spacing(10);
+    this.#urlBox.set_halign(Gtk.Align.CENTER);
+
+    this.#urlLabel = Gtk.Label(kw`label=${this.#url}`);
+
+    this.#copyButton = Gtk.Button(kw`label=""`);
+    this.#copyButton.set_icon_name("edit-copy-symbolic");
+    this.#copyButton.set_tooltip_text("Copy URL");
+    this.#copyButton.connect(
+      "clicked",
+      python.callback(() => {
+        const bytes = new GLib.Bytes(
+          Array.from(new TextEncoder().encode(this.#url)),
+        );
+        const provider = Gdk.ContentProvider.new_for_bytes("text/plain", bytes);
+        this.#clipboard.set_content(provider);
+      }),
+    );
+
+    this.#urlBox.append(this.#urlLabel);
+    this.#urlBox.append(this.#copyButton);
+
+    this.#urlBox.set_visible(true);
+    this.#urlBox.get_style_context().add_class("url-box");
+  };
 
   #createHeaderBar = () => {
     const header = Gtk.HeaderBar();
@@ -319,14 +363,19 @@ class MainWindow extends Gtk.ApplicationWindow {
 
 class App extends Adw.Application {
   #win: MainWindow | undefined;
+  #url: string;
 
-  constructor(kwArg: NamedArgument) {
+  constructor(kwArg: NamedArgument, url: string) {
     super(kwArg);
+    this.#url = url;
     this.connect("activate", this.onActivate);
   }
 
   onActivate = python.callback((_kwarg, app: Adw_.Application) => {
-    this.#win = new MainWindow(new NamedArgument("application", app));
+    this.#win = new MainWindow(
+      new NamedArgument("application", app),
+      this.#url,
+    );
     this.#win.present();
   });
 }
@@ -337,7 +386,10 @@ if (import.meta.main) {
     console.log("[main] received msg:", event.data);
     switch (event.data.type) {
       case "start": {
-        const app = new App(kw`application_id=${"io.github.sigmasd.share"}`);
+        const app = new App(
+          kw`application_id=${"io.github.sigmasd.share"}`,
+          event.data.url,
+        );
         const signal = python.import("signal");
         GLib.unix_signal_add(
           GLib.PRIORITY_HIGH,
