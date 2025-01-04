@@ -9,7 +9,7 @@ import {
   kw,
   NamedArgument,
   python,
-} from "jsr:@sigma/gtk-py@0.4.26";
+} from "jsr:@sigma/gtk-py@0.4.27";
 import meta from "../deno.json" with { type: "json" };
 
 const gi = python.import("gi");
@@ -135,11 +135,7 @@ class MainWindow extends Gtk.ApplicationWindow {
     this.#copyButton.connect(
       "clicked",
       python.callback(() => {
-        const bytes = new GLib.Bytes(
-          Array.from(new TextEncoder().encode(this.#url)),
-        );
-        const provider = Gdk.ContentProvider.new_for_bytes("text/plain", bytes);
-        this.#clipboard.set_content(provider);
+        this.#clipboard.set(this.#url);
       }),
     );
 
