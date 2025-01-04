@@ -46,6 +46,8 @@ export interface Clipboard {
   ) => void;
   read_texture_finish: (result: Gio.AsyncResult) => Texture;
   set_content(provider: ContentProvider): boolean;
+  //TODO: value is GObject.Value
+  set(value: string): void;
 }
 
 export interface ContentProvider {
