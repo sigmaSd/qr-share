@@ -12,7 +12,6 @@ export interface Widget {
   connect(signal: string, callback: Callback): void;
 }
 
-// deno-lint-ignore no-empty-interface
 export interface MenuShell extends Widget {
 }
 

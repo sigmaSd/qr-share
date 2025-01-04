@@ -56,6 +56,15 @@ export interface Gtk {
   EventControllerKey: {
     new: () => EventControllerKey;
   };
+  Align: {
+    FILL: Align;
+    START: Align;
+    END: Align;
+    CENTER: Align;
+    BASELINE: Align;
+    BASELINE_FILL: Align;
+    BASELINE_CENTER: Align;
+  };
 }
 
 export type Application = PythonConvertible;
@@ -111,6 +120,7 @@ export interface Widget extends GObject2_.Object {
   set_tooltip_text(text: string): void;
   set_visible(visible: boolean): void;
   set_size_request(width: number, height: number): void;
+  set_halign(align: Align): void;
   add_controller(controller: EventController): void;
   get_style_context(): StyleContext;
 }
@@ -250,4 +260,13 @@ export enum ApplicationInhibitFlags {
   SWITCH = 2,
   SUSPEND = 4,
   IDLE = 8,
+}
+export enum Align {
+  FILL = 0,
+  START = 1,
+  END = 2,
+  CENTER = 3,
+  BASELINE = 4,
+  BASELINE_FILL = 4,
+  BASELINE_CENTER = 5,
 }

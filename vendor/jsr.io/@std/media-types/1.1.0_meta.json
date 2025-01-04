@@ -1,24 +1,64 @@
 {
   "manifest": {
-    "/parse_media_type_test.ts": {
-      "size": 3943,
-      "checksum": "sha256-056f97b020bded6f1c2dcdd5841d97f50bfcd9c72d804730f3664397d3d87ce0"
+    "/get_charset_test.ts": {
+      "size": 652,
+      "checksum": "sha256-67c0a8e357a5dc46c433e83c3f0e49c7cc9f8cc30e9c47e5a166741e4b0cbf0a"
     },
-    "/content_type.ts": {
-      "size": 3163,
-      "checksum": "sha256-5ee0c0aba500119c72af6afa8b59b233750f135451eddea54cfcf6ffb1025000"
-    },
-    "/_db.ts": {
-      "size": 1375,
-      "checksum": "sha256-16a6a8786e8c9c2f92ebf0adb062dac801b8a1569fec95c1783032b43750a0a4"
+    "/parse_media_type.ts": {
+      "size": 3730,
+      "checksum": "sha256-8eb4d92448cb8a92f8f1f22134e01134a7b5ab880bfff8b7c24b0ba3355b4f81"
     },
     "/get_charset.ts": {
       "size": 1483,
       "checksum": "sha256-d89b11c1a7691286af23bf075a2a7a2e2bb35b6b6776a06c4f02a3343012a759"
     },
+    "/type_by_extension_test.ts": {
+      "size": 689,
+      "checksum": "sha256-7a984c9c59c2feef8350f7bddf0f00208629d7e494a9905e3da340de6769dc05"
+    },
+    "/all_extensions.ts": {
+      "size": 1158,
+      "checksum": "sha256-6880b9223bde15fa7e1a7d482fa897d3a747cadd398e0b5c079e40fbb8d03cf8"
+    },
     "/format_media_type_test.ts": {
       "size": 2239,
-      "checksum": "sha256-672443775366a0f1878c5e88aa6abdb9af0f6a3c4d51e63b0b15044adf8f1d9b"
+      "checksum": "sha256-91842d7e05bbe0263b758868dc3c3b70dc49f92059f66fa5b3ea0bd6adb7e050"
+    },
+    "/type_by_extension.ts": {
+      "size": 1182,
+      "checksum": "sha256-8239d5aff59f62e137c092d65bf2c4606abd5c38c8b916951ac74b2a0aa56e70"
+    },
+    "/_db.ts": {
+      "size": 1375,
+      "checksum": "sha256-16a6a8786e8c9c2f92ebf0adb062dac801b8a1569fec95c1783032b43750a0a4"
+    },
+    "/format_media_type.ts": {
+      "size": 2511,
+      "checksum": "sha256-ff23a1ca7664e8ab3a727920bcc0cee866903f34f4607623e292e9d33adc3fc3"
+    },
+    "/vendor/LICENSE": {
+      "size": 1172,
+      "checksum": "sha256-cc1dfd4dafa27271e8212cd3b274eeb3f262e40a6fdab36ddc3f9696f706f58b"
+    },
+    "/deno.json": {
+      "size": 420,
+      "checksum": "sha256-8d1f63f2b1324afac84d180ef261dc72c785c50fe539cb8be2ed5709292f5c2e"
+    },
+    "/vendor/db.ts": {
+      "size": 201923,
+      "checksum": "sha256-97c9133bcf43ee77b24748e0d96dfb00308d69c0ea3b5c1ec8d43f142ef723ea"
+    },
+    "/parse_media_type_test.ts": {
+      "size": 4058,
+      "checksum": "sha256-9da296c85f2eeae7c6616ea7298b64e3bb945d4991a1c562da3c682a91caabdf"
+    },
+    "/content_type.ts": {
+      "size": 3163,
+      "checksum": "sha256-5ee0c0aba500119c72af6afa8b59b233750f135451eddea54cfcf6ffb1025000"
+    },
+    "/all_extensions_test.ts": {
+      "size": 675,
+      "checksum": "sha256-b7b3d0d7955cf60f6cf9ea760acb87def6d59516293398e1ee23c5ec22a152f9"
     },
     "/mod.ts": {
       "size": 1231,
@@ -30,119 +70,26 @@
     },
     "/extension_test.ts": {
       "size": 541,
-      "checksum": "sha256-dfb3a4893e5cfe6e3301adcb95d96e33cb4e134ab29ad7da8bed9c4aa3d10c73"
-    },
-    "/type_by_extension_test.ts": {
-      "size": 689,
-      "checksum": "sha256-3858eea87591fbe4b3f872c90d269183b73413af81f2acc16c61025b729a33dd"
+      "checksum": "sha256-7c4eab9351964ac599243ba4f72f4cd76986a4d1e7de19143ad8b3dfa8e82c48"
     },
     "/_util.ts": {
       "size": 3253,
       "checksum": "sha256-a351cc583523d47d42e65073d67c7a80575d1d1aaf8e72e6dfa5dbd986bbdb52"
     },
-    "/all_extensions.ts": {
-      "size": 1158,
-      "checksum": "sha256-6880b9223bde15fa7e1a7d482fa897d3a747cadd398e0b5c079e40fbb8d03cf8"
+    "/content_type_test.ts": {
+      "size": 1543,
+      "checksum": "sha256-c31e9a00d82398393359c22ac285f4cbad1ad97fc37c42b6baf1799fa7bdb9d1"
     },
-    "/vendor/LICENSE": {
-      "size": 1172,
-      "checksum": "sha256-cc1dfd4dafa27271e8212cd3b274eeb3f262e40a6fdab36ddc3f9696f706f58b"
-    },
-    "/all_extensions_test.ts": {
-      "size": 675,
-      "checksum": "sha256-402148c79f9bc45003adf08143a1871997c924c74e607b89b7c08ba69d64053c"
-    },
-    "/deno.json": {
-      "size": 420,
-      "checksum": "sha256-8cbe8f2e2308989ba582f1b7c3eb44437edac4330215f7aab6f5ac54d9fcf8a3"
-    },
-    "/type_by_extension.ts": {
-      "size": 1182,
-      "checksum": "sha256-8239d5aff59f62e137c092d65bf2c4606abd5c38c8b916951ac74b2a0aa56e70"
-    },
-    "/format_media_type.ts": {
-      "size": 2511,
-      "checksum": "sha256-ff23a1ca7664e8ab3a727920bcc0cee866903f34f4607623e292e9d33adc3fc3"
-    },
-    "/parse_media_type.ts": {
-      "size": 3622,
-      "checksum": "sha256-56e3c0d3416318b48391a5c260040bb90ac216cf0f5a74297546fcb77ddfe4e3"
+    "/_util_test.ts": {
+      "size": 4183,
+      "checksum": "sha256-95b7e7ace3e13e08eab2efd54f903f363a2ff3a4760e35236afebb9ef512ac35"
     },
     "/extension.ts": {
       "size": 972,
       "checksum": "sha256-b10bac0d01f70e2f8f8a43808c411ccc5182c60813fbe9eb85d6a4e0f9932a9c"
-    },
-    "/vendor/db.ts": {
-      "size": 195268,
-      "checksum": "sha256-5fe2b7dcca6b8abdd06b7344780f5b1d37c52d3a233a489c9bdc444469ec01ba"
-    },
-    "/_util_test.ts": {
-      "size": 4183,
-      "checksum": "sha256-57b24ee27a35afa74c762dbd85518ee889e524e5c09eafd4aeda209f36ac7d52"
-    },
-    "/get_charset_test.ts": {
-      "size": 652,
-      "checksum": "sha256-4a28346989f1b36327135d1e2225cdef506fc31fc260b1ff22ae22610bcdc4af"
-    },
-    "/content_type_test.ts": {
-      "size": 1543,
-      "checksum": "sha256-f170a45b986880c2c514327440f70d614e1a286324f354483809b4c7d6ae510c"
     }
   },
   "moduleGraph2": {
-    "/_db.ts": {
-      "dependencies": [
-        {
-          "type": "static",
-          "kind": "import",
-          "specifier": "./vendor/db.ts",
-          "specifierRange": [
-            [
-              1,
-              15
-            ],
-            [
-              1,
-              31
-            ]
-          ]
-        },
-        {
-          "type": "static",
-          "kind": "importType",
-          "specifier": "./_util.ts",
-          "specifierRange": [
-            [
-              2,
-              29
-            ],
-            [
-              2,
-              41
-            ]
-          ]
-        }
-      ]
-    },
-    "/parse_media_type.ts": {
-      "dependencies": [
-        {
-          "type": "static",
-          "kind": "import",
-          "specifier": "./_util.ts",
-          "specifierRange": [
-            [
-              3,
-              54
-            ],
-            [
-              3,
-              66
-            ]
-          ]
-        }
-      ]
-    },
     "/vendor/db.ts": {},
     "/mod.ts": {
       "dependencies": [
@@ -248,6 +195,25 @@
             [
               35,
               38
+            ]
+          ]
+        }
+      ]
+    },
+    "/extension.ts": {
+      "dependencies": [
+        {
+          "type": "static",
+          "kind": "import",
+          "specifier": "./all_extensions.ts",
+          "specifierRange": [
+            [
+              3,
+              30
+            ],
+            [
+              3,
+              51
             ]
           ]
         }
@@ -385,6 +351,79 @@
         }
       ]
     },
+    "/parse_media_type.ts": {
+      "dependencies": [
+        {
+          "type": "static",
+          "kind": "import",
+          "specifier": "./_util.ts",
+          "specifierRange": [
+            [
+              3,
+              54
+            ],
+            [
+              3,
+              66
+            ]
+          ]
+        }
+      ]
+    },
+    "/_db.ts": {
+      "dependencies": [
+        {
+          "type": "static",
+          "kind": "import",
+          "specifier": "./vendor/db.ts",
+          "specifierRange": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              31
+            ]
+          ]
+        },
+        {
+          "type": "static",
+          "kind": "importType",
+          "specifier": "./_util.ts",
+          "specifierRange": [
+            [
+              2,
+              29
+            ],
+            [
+              2,
+              41
+            ]
+          ]
+        }
+      ]
+    },
+    "/_util.ts": {},
+    "/type_by_extension.ts": {
+      "dependencies": [
+        {
+          "type": "static",
+          "kind": "import",
+          "specifier": "./_db.ts",
+          "specifierRange": [
+            [
+              3,
+              22
+            ],
+            [
+              3,
+              32
+            ]
+          ]
+        }
+      ]
+    },
     "/get_charset.ts": {
       "dependencies": [
         {
@@ -433,46 +472,7 @@
           ]
         }
       ]
-    },
-    "/type_by_extension.ts": {
-      "dependencies": [
-        {
-          "type": "static",
-          "kind": "import",
-          "specifier": "./_db.ts",
-          "specifierRange": [
-            [
-              3,
-              22
-            ],
-            [
-              3,
-              32
-            ]
-          ]
-        }
-      ]
-    },
-    "/extension.ts": {
-      "dependencies": [
-        {
-          "type": "static",
-          "kind": "import",
-          "specifier": "./all_extensions.ts",
-          "specifierRange": [
-            [
-              3,
-              30
-            ],
-            [
-              3,
-              51
-            ]
-          ]
-        }
-      ]
-    },
-    "/_util.ts": {}
+    }
   },
   "exports": {
     ".": "./mod.ts",

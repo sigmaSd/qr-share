@@ -10,6 +10,9 @@ export interface GLib {
     callback: Callback,
   ): { valueOf: () => number };
   idle_add(callback: Callback): void;
+  Bytes: {
+    new (data: number[]): Bytes;
+  };
 }
 
 export interface Bytes {
