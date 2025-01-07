@@ -15,7 +15,7 @@
       <li>Instant file sharing with simple drag-and-drop functionality</li>
       <li>Receiver needs only a QR code scanner - no additional software required</li>
       <li>Ability to drop directories to view and selectively download contained files</li>
-      <li>Share data from the clipboard, automatically detect if the clipboard contains an image, or a text, note that pasting files will only send paths as text, so its better to drop them instead</li>
+      <li>Share data from the clipboard, automatically detect if the clipboard contains an image, or a text, note that pasting files will only send paths as text (if the app doesn't have read permission), so its better to drop them instead</li>
     </ul>
     <p>Share makes file transfer hassle-free, whether you're sharing documents, images, or any other file type. Simply drop a file into the application. Scan the QR code with another device to initiate the transfer.</p>
   </description>

@@ -320,11 +320,15 @@ class MainWindow extends Gtk.ApplicationWindow {
         // This is a file URI
         const filePath = text.replace("file://", "").trim();
         const fileName = filePath.split("/").pop();
-        // NOTE: the original idea is to send the file
-        // This works, but not in flatpak becasue it will need read permission to the user filesystem, unlinke drop event which automagiclt transfers the file to the app sandbox
-        // So unfortantly we just send the filepath as text
-        this.#label.set_text(`text: ${fileName || "Pasted file"}`);
-        worker.postMessage({ type: "text", content: filePath });
+        if (canAccessFile(filePath)) {
+          this.#label.set_text(`file: ${fileName || "Pasted file"}`);
+          worker.postMessage({ type: "file", path: filePath });
+        } else {
+          // In flatpak the app might not have read permission
+          // So if we can't access the file, we just send the filepath as text
+          this.#label.set_text(`text: ${fileName || "Pasted file"}`);
+          worker.postMessage({ type: "text", content: text });
+        }
       } else if (mimeType.startsWith("text/plain")) {
         // This is plain text
         this.#label.set_text(
@@ -401,4 +405,13 @@ if (import.meta.main) {
       }
     }
   };
+}
+
+function canAccessFile(path: string) {
+  try {
+    Deno.statSync(path);
+    return true;
+  } catch {
+    return false;
+  }
 }
