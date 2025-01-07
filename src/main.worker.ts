@@ -144,9 +144,6 @@ if (import.meta.main) {
           headers: headers,
         });
       }
-      if (new URL(req.url).pathname !== "/") {
-        return new Response("Not Found", { status: 404, headers });
-      }
 
       if (textContent) {
         console.log("[worker] serving text content");
