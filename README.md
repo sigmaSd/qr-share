@@ -1,6 +1,6 @@
-# QR Share
+# Share
 
-Drop a file in this application to share it with a qr code
+Drop a file in this application to share (and more)
 
 <a href='https://flathub.org/apps/io.github.sigmasd.share'>
   <img width='240' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-i-en.png'/>
