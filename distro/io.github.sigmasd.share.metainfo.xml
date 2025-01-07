@@ -35,6 +35,11 @@
   <content_rating type="oars-1.1" />
 
   <releases>
+    <release version="0.1.17" date="2025-01-07">
+        <description>
+        <p>Pasting a file from the clipboard will share it as a file instead of text if the app have read permission to the filesystem</p>
+        </description>
+    </release>
     <release version="0.1.16" date="2025-01-07">
         <description>
         <p>Fix sharing directories</p>
