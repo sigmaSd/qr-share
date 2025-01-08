@@ -7,6 +7,7 @@ import type {
   NamedArgument,
   PythonConvertible,
 } from "../mod.ts";
+import { Gdk } from "./gdk4.ts";
 
 export interface Gtk {
   Picture(): Picture;
@@ -49,7 +50,7 @@ export interface Gtk {
   StringList: { new: (strings: string[]) => StringList };
   DropTarget: {
     new: (
-      type: GObject2_.GType | Gio2_.File,
+      type: GObject2_.GType | Gio2_.File | Gdk4_.FileList,
       actions: Gdk4_.DragAction,
     ) => DropTarget;
   };

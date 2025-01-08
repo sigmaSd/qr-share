@@ -41,6 +41,81 @@ const emptyPage = `\
 </body>
 </html>`;
 
+async function isDirectory(path: string): Promise<boolean> {
+  try {
+    const stat = await Deno.stat(path);
+    return stat.isDirectory;
+  } catch {
+    return false;
+  }
+}
+
+const filesListPage = async (files: Array<{ name: string; path: string }>) => {
+  const fileLinksPromises = files.map(async (file) => {
+    const isDir = await isDirectory(file.path);
+    const icon = isDir ? "📁" : "📄";
+    return `<li><a href="/files/${
+      encodeURIComponent(file.name)
+    }">${icon} ${file.name}</a></li>`;
+  });
+  const fileLinks = (await Promise.all(fileLinksPromises)).join("");
+
+  return `\
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shared Files</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .files-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+        }
+        a {
+            color: #0066cc;
+            text-decoration: none;
+            padding: 8px;
+            display: block;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        a:hover {
+            background-color: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="files-container">
+        <h1>Shared Files</h1>
+        <ul>
+            ${fileLinks}
+        </ul>
+    </div>
+</body>
+</html>`;
+};
+
 const errorPage = `\
 <!DOCTYPE html>
 <html lang="en">
@@ -114,6 +189,7 @@ if (import.meta.main) {
   let filePath: string | null = null;
   let textContent: string | null = null;
   let qrPath: string;
+  let files: Array<{ name: string; path: string }> | null = null;
 
   const startServer = () => {
     Deno.serve({
@@ -137,7 +213,7 @@ if (import.meta.main) {
         "Expires": "0",
       });
 
-      if (!filePath && !textContent) {
+      if (!filePath && !textContent && !files) {
         headers.set("Content-Type", "text/html");
         return new Response(emptyPage, {
           status: 404,
@@ -148,6 +224,60 @@ if (import.meta.main) {
       if (textContent) {
         console.log("[worker] serving text content");
         return new Response(textContent, { headers });
+      }
+
+      if (files) {
+        const url = new URL(req.url);
+        if (url.pathname.startsWith("/files/")) {
+          const fileName = decodeURIComponent(
+            url.pathname.slice("/files/".length),
+          );
+          const file = files.find((f) => f.name === fileName);
+          if (file) {
+            try {
+              console.log("[worker] serving file:", file.path);
+              const meta = await Deno.stat(file.path);
+              let response;
+              if (meta.isFile) {
+                response = await serveFile(req, file.path);
+              } else {
+                console.log("[worker] serving dir");
+                response = await serveDir(req, {
+                  fsRoot: file.path,
+                  showDirListing: true,
+                  showIndex: true,
+                });
+              }
+              // Clone headers from the original response
+              const responseHeaders = new Headers(response.headers);
+
+              // Update headers with the custom headers
+              headers.forEach((value, key) => {
+                responseHeaders.set(key, value);
+              });
+
+              // Return the new response with the updated headers
+              return new Response(response.body, {
+                status: response.status,
+                statusText: response.statusText,
+                headers: responseHeaders,
+              });
+            } catch (error) {
+              console.error("[worker] Error serving file:", error);
+              headers.set("Content-Type", "text/html");
+              return new Response(
+                errorPage.replace(
+                  "{{ERROR_MESSAGE}}",
+                  error instanceof Error ? error.message : String(error),
+                ),
+                { status: 404, headers },
+              );
+            }
+          }
+        }
+
+        headers.set("Content-Type", "text/html");
+        return new Response(await filesListPage(files), { headers });
       }
 
       if (filePath) {
@@ -200,13 +330,20 @@ if (import.meta.main) {
   self.onmessage = (event) => {
     console.log("[worker] received msg:", event.data);
     switch (event.data.type) {
+      case "files":
+        files = event.data.files;
+        filePath = null;
+        textContent = null;
+        break;
       case "file":
         filePath = event.data.path;
-        textContent = null; // Reset text content when a file is shared
+        files = null;
+        textContent = null;
         break;
       case "text":
         textContent = event.data.content;
-        filePath = null; // Reset file path when text is shared
+        files = null;
+        filePath = null;
         break;
       case "qrPath":
         qrPath = event.data.path;

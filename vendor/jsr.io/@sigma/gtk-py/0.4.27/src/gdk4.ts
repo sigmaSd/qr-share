@@ -12,6 +12,7 @@ export interface Gdk {
     CONTROL_MASK: ModifierType;
   };
   ContentProvider: ContentProvider;
+  FileList: FileList;
 }
 
 export interface Display {
@@ -56,4 +57,8 @@ export interface ContentProvider {
 
 export enum ModifierType {
   CONTROL_MASK = 4,
+}
+
+export interface FileList {
+  get_files(): { valueOf: () => Gio.File[] };
 }

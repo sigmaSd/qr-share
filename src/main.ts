@@ -110,9 +110,10 @@ class MainWindow extends Gtk.ApplicationWindow {
     this.set_child(this.#contentBox);
 
     this.#dropTarget = Gtk.DropTarget.new(
-      Gio.File,
+      Gdk.FileList,
       Gdk.DragAction.COPY,
     );
+    console.log("reacher");
     this.#dropTarget.connect("drop", this.#onDrop);
     this.add_controller(this.#dropTarget);
 
@@ -209,38 +210,53 @@ class MainWindow extends Gtk.ApplicationWindow {
   });
 
   #onDrop = python.callback(
-    (_a1: object, _dropTarget: Gtk_.DropTarget, file: Gio_.File) => {
+    (_a1: object, _dropTarget: Gtk_.DropTarget, files: Gdk_.FileList) => {
       let filePath;
       let fileName;
+      console.log(
+        "files",
+        files.get_files().valueOf().map((f) => f.get_path()),
+      );
 
-      if (typeof file.get_path().valueOf() === "string") {
-        filePath = file.get_path().valueOf();
-        fileName = filePath.split("/").pop() ?? null;
-      } else {
-        // Handle file without a path
-        const [success, contents] = file.load_contents();
-        if (success.valueOf()) {
-          fileName = "Dropped File";
-          filePath = Deno.makeTempFileSync();
-          // keep writeFile async, so it dones't block the ui
-          // somehow it works with gio event loop
-          Deno.writeFile(
-            filePath,
-            new Uint8Array(python.list(contents).valueOf()),
-          );
+      const filesToSend = [];
+      for (const file of files.get_files().valueOf()) {
+        if (typeof file.get_path().valueOf() === "string") {
+          filePath = file.get_path().valueOf();
+          fileName = filePath.split("/").pop() ?? null;
         } else {
-          console.warn("Failed to read contents of the dropped file");
-          return false;
+          // Handle file without a path
+          const [success, contents] = file.load_contents();
+          if (success.valueOf()) {
+            fileName = "Dropped File";
+            filePath = Deno.makeTempFileSync();
+            // keep writeFile async, so it dones't block the ui
+            // somehow it works with gio event loop
+            Deno.writeFile(
+              filePath,
+              new Uint8Array(python.list(contents).valueOf()),
+            );
+          } else {
+            console.warn("Failed to read contents of the dropped file");
+            continue;
+            // return false;
+          }
         }
-      }
 
-      if (!fileName) {
-        console.warn("Could not detect filename from this file");
+        if (!fileName) {
+          console.warn("Could not detect filename from this file");
+          continue;
+          // return false;
+        }
+
+        this.#label.set_text(`file: ${fileName}`);
+        filesToSend.push({ name: fileName, path: filePath });
+        // worker.postMessage({ type: "file", path: filePath });
+        // return true;
+      }
+      if (filesToSend.length === 0) {
         return false;
       }
-
-      this.#label.set_text(`file: ${fileName}`);
-      worker.postMessage({ type: "file", path: filePath });
+      worker.postMessage({ type: "files", files: filesToSend });
       return true;
     },
   );
